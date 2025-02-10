@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
 }
-li, ul, p, a{
+li, ul, p, a,label{
   font-size: 1.5vw;
 }
 h4{

@@ -1,49 +1,93 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "../styles/Sidebar.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHouse,
+  faChartSimple,
+  faLocationDot,
+  faUser,
+  faTruck,
+  faGear,
+  faArrowRightFromBracket,
+  faBars,
+  faBarsStaggered,
+} from "@fortawesome/free-solid-svg-icons";
 
-const Sidebar = () => {
+const MySidebar = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <nav className="sidebar">
-      <Link to="/" className="home-link">
-            <img src="/assets/list-logo.png" alt="Accueil" />
-      </Link>
-      <ul className="start-links">
-        <li>
-          <Link to="/">
-            <img src="/assets/home-logo.png" alt="Accueil" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            <img src="/assets/box-logo.png" alt="Login" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/login">
-            <img src="/assets/users-logo.png" alt="Profil" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            <img src="/assets/pin-logo.png" alt="Map" />
-          </Link>
-        </li>
-        </ul>
-        <ul className="end-links">
-        <li>
-          <Link to="/">
-            <img src="/assets/settings-logo.png" alt="Paramètres" />
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            <img src="/assets/exit-logo.png" alt="Déconnexion" />
-          </Link>
-        </li>
-      </ul>
-    </nav>
+    <div className="h-screen flex">
+      <Sidebar collapsed={collapsed} className="h-full custom-sidebar">
+        <Menu>
+          <MenuItem
+            icon={<FontAwesomeIcon icon={collapsed ? faBars : faBarsStaggered} />}
+            onClick={() => setCollapsed(!collapsed)}
+            className="menu-toggle"
+          >
+            {!collapsed && <span className="sidebar-title">MapMarket</span>}
+          </MenuItem>
+
+          <div className="main-links">
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faHouse} />}
+              component={<Link to="/" />}
+            >
+              Dashboard
+            </MenuItem>
+
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faChartSimple} />}
+              component={<Link to="/donnees" />}
+            >
+              Données
+            </MenuItem>
+
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faLocationDot} />}
+              component={<Link to="/cartographie" />}
+              className="active"
+            >
+              Cartographie
+            </MenuItem>
+
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faUser} />}
+              component={<Link to="/login" />}
+            >
+              Employés
+            </MenuItem>
+
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faTruck} />}
+              component={<Link to="/stock" />}
+            >
+              Stock
+            </MenuItem>
+          </div>
+
+          <div className="option-links">
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faGear} />}
+              component={<Link to="/parametres" />}
+            >
+              Paramètres
+            </MenuItem>
+
+            <MenuItem
+              icon={<FontAwesomeIcon icon={faArrowRightFromBracket} className="logout-icon" />}
+              component={<Link to="/logout" />}
+              className="logout"
+            >
+              Déconnexion
+            </MenuItem>
+          </div>
+        </Menu>
+      </Sidebar>
+    </div>
   );
 };
 
-export default Sidebar;
+export default MySidebar;
