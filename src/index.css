@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
 }
-li, ul, p, a,label{
+li, ul, p, a,label, input{
   font-size: 1.5vw;
 }
 h4{
@@ -16,4 +16,31 @@ h2{
 }
 h1{
   font-size: 2vw;
+}
+
+/* Styles pour les tablettes */
+@media (max-width: 1024px) {
+}
+
+/* Styles pour les smartphones */
+@media (max-width: 768px) {
+  li, ul, p, a,label, input{
+    font-size: 2vw;
+  }
+  h4{
+    font-size: 2.2vw;
+  }
+  h3{
+    font-size: 2.5vw;
+  }
+  h2{
+    font-size: 2.7vw;
+  }
+  h1{
+    font-size: 3vw;
+  }
+}
+
+/* Styles pour les petits smartphones */
+@media (max-width: 480px) {
 }

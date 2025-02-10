@@ -4,7 +4,7 @@ import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "../styles/Sidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHouse,
+  faHouse as faHouseRegular,
   faChartSimple,
   faLocationDot,
   faUser,
@@ -16,7 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const MySidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <div className="h-screen flex">
@@ -32,7 +32,7 @@ const MySidebar = () => {
 
           <div className="main-links">
             <MenuItem
-              icon={<FontAwesomeIcon icon={faHouse} />}
+              icon={<FontAwesomeIcon icon={faHouseRegular} />}
               component={<Link to="/" />}
             >
               Dashboard

@@ -3,17 +3,28 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 15%;
+    margin-top: 4%;
     justify-content: center;
 }
-
+.title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2%;
+}
+.title img{
+    margin-right: 4%;
+    width: 5vw;
+    height: 5vw;
+}
 .login-form {
     margin-top: 2%;
-    width: 50%;
+    width: 60%;
     max-width: 80%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     padding: 2%;
     border-radius: 0.8vw;
     background-color: rgb(220, 220, 220);
@@ -28,12 +39,12 @@
 
 .login-form input {
     align-self: flex-start;
-    width: 50%;
     padding: 1.2%;
     border-radius: 0.4vw;
     border: none;
 }
 
+/* Style du bouton de soumission */
 .login-form .submitLogin {
     margin-top: 4%;
     color: white;
@@ -43,14 +54,94 @@
     width: 30%;
     padding: 1%;
     cursor: pointer;
+    box-shadow: 0.2vw 0.2vw 1vw 0vw rgb(205, 205, 205);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .login-form .submitLogin:hover {
     opacity: 80%;
 }
 
-@media (max-width: 600px) {
+.input-display{
+    margin-top: 2%;
+    border-radius: 0.2vw;
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    height: auto;
+    background-color: white;
+}
+.input-display input{
+    width: 100%;
+    padding: 1%;
+}
+.input-display .input-icon{
+    border-right: 2px solid black;
+    padding: 1%;
+    font-size: 1.7vw;
+}
+.login-container a{
+    margin-top: 4%;
+}
+.remember-display{
+    margin-top: 4%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.remember-display input{
+    width: 1.5vw;
+    height: 1.5vw;
+}
+
+.remember-display p{
+    margin-left: 2%;
+}
+
+/* Styles pour les tablettes */
+@media (max-width: 1024px) {
+    .container {
+        width: 90%;
+    }
+}
+
+/* Styles pour les smartphones */
+@media (max-width: 768px) {
+    .login-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .login-form label{
+        text-align: center;
+    }
     .login-form {
-        width: 80vw;
+        align-items: center;
+        width: 100%;
+    }
+    .remember-display{
+        width: 100%;
+        justify-content: center;
+    }
+    .input-display .input-icon{
+        font-size: 2.5vw;
+    }
+    .remember-display input{
+        content: '';
+        display: block;
+        width: 3vw;
+        height: 3vw;
+        border: 2px solid #000;
+        background-color: #fff;
+        border-radius: 4px;
+    }
+}
+
+/* Styles pour les petits smartphones */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
     }
 }
