@@ -24,14 +24,14 @@ function Login() {
           <label for='password'>Mot de passe</label>
           <div className="input-display">
             <FontAwesomeIcon icon={faRegularBell} className="input-icon"/>
-            <input type='email' name='password' required/>
+            <input type='password' name='password' required/>
           </div>
-          <a href="mot de pass oublié">Mote de passe oublié ?</a>
+          <a href="forgotPassword">Mot de passe oublié ?</a>
           <div className="remember-display">
             <input type='checkBox' name='remember'/>
             <p>Se souvenir de moi</p>
           </div>
-          <input type='submit' name='submitLogin' className="submitLogin" required/>
+          <input type='submit' name='submitLogin' value="Se connecter" className="submitLogin" required/>
         </div>
       </header>
     </div>
