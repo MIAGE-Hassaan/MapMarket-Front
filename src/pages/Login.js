@@ -9,7 +9,7 @@ import {
 function Login() {
   return (
     <div className="Login">
-      <header className="login-container">
+      <div className="login-container">
         <div className="title">
           <img src="../assets/image1.png" alt="logo"/>
           <h1>MapMarket</h1>
@@ -33,7 +33,7 @@ function Login() {
           </div>
           <input type='submit' name='submitLogin' value="Se connecter" className="submitLogin" required/>
         </div>
-      </header>
+      </div>
     </div>
   );
 }

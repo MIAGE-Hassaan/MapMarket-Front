@@ -2,18 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "../styles/Sidebar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHouse as faHouseRegular,
-  faChartSimple,
-  faLocationDot,
-  faUser,
-  faTruck,
-  faGear,
-  faArrowRightFromBracket,
-  faBars,
-  faBarsStaggered,
-} from "@fortawesome/free-solid-svg-icons";
 
 const MySidebar = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -23,7 +11,17 @@ const MySidebar = () => {
       <Sidebar collapsed={collapsed} className="h-full custom-sidebar">
         <Menu>
           <MenuItem
-            icon={<FontAwesomeIcon icon={collapsed ? faBars : faBarsStaggered} />}
+            icon={
+              <img
+                src={
+                  collapsed
+                    ? "../assets/sidebar-unfold-line.png"
+                    : "../assets/sidebar-fold-line.png"
+                }
+                alt={collapsed ? "Unfold" : "Fold"}
+                className="sidebar-icon"
+              />
+            }
             onClick={() => setCollapsed(!collapsed)}
             className="menu-toggle"
           >
@@ -32,21 +30,21 @@ const MySidebar = () => {
 
           <div className="main-links">
             <MenuItem
-              icon={<FontAwesomeIcon icon={faHouseRegular} />}
+              icon={<img src="../assets/home-9-line.png" alt="Dashboard" className="sidebar-icon" />}
               component={<Link to="/" />}
             >
               Dashboard
             </MenuItem>
 
             <MenuItem
-              icon={<FontAwesomeIcon icon={faChartSimple} />}
+              icon={<img src="../assets/bar-chart-2-line.png" alt="Données" className="sidebar-icon" />}
               component={<Link to="/donnees" />}
             >
               Données
             </MenuItem>
 
             <MenuItem
-              icon={<FontAwesomeIcon icon={faLocationDot} />}
+              icon={<img src="../assets/map-pin-line.png" alt="Cartographie" className="sidebar-icon" />}
               component={<Link to="/cartographie" />}
               className="active"
             >
@@ -54,14 +52,14 @@ const MySidebar = () => {
             </MenuItem>
 
             <MenuItem
-              icon={<FontAwesomeIcon icon={faUser} />}
+              icon={<img src="../assets/group-line.png" alt="Employés" className="sidebar-icon" />}
               component={<Link to="/login" />}
             >
               Employés
             </MenuItem>
 
             <MenuItem
-              icon={<FontAwesomeIcon icon={faTruck} />}
+              icon={<img src="../assets/truck-line.png" alt="Stock" className="sidebar-icon" />}
               component={<Link to="/stock" />}
             >
               Stock
@@ -70,14 +68,14 @@ const MySidebar = () => {
 
           <div className="option-links">
             <MenuItem
-              icon={<FontAwesomeIcon icon={faGear} />}
+              icon={<img src="../assets/settings-3-line.png" alt="Paramètres" className="sidebar-icon" />}
               component={<Link to="/parametres" />}
             >
               Paramètres
             </MenuItem>
 
             <MenuItem
-              icon={<FontAwesomeIcon icon={faArrowRightFromBracket} className="logout-icon" />}
+              icon={<img src="../assets/door-open-line.png" alt="Déconnexion" className="sidebar-icon logout-icon" />}
               component={<Link to="/logout" />}
               className="logout"
             >

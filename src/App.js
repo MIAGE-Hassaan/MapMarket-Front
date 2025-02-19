@@ -5,17 +5,19 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Tasks from "./pages/Tasks";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Layout contient la Sidebar + Navbar */}
+        {/* Layout contient la Sidebar */}
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} /> {/* Page d'accueil */}
-          <Route path="login" element={<Login />} /> {/* Page Login */}
-          <Route path="forgotPassword" element={<ForgotPassword />} /> {/* Page ForgotPassword */}
-          <Route path="resetPassword" element={<ResetPassword />} /> {/* Page ResetPassword */}
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="forgotPassword" element={<ForgotPassword />} />
+          <Route path="resetPassword" element={<ResetPassword />} />
+          <Route path="tasks" element={<Tasks/>}/>
         </Route>
       </Routes>
     </Router>

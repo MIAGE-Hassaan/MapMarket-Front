@@ -7,7 +7,7 @@ import {
 function ForgotPassword() {
   return (
     <div className="ForgotPassword">
-      <header className="recovery-container">
+      <div className="recovery-container">
         <div className="title">
           <img src="../assets/image1.png" alt="logo"/>
           <h1>MapMarket</h1>
@@ -22,7 +22,7 @@ function ForgotPassword() {
           <a href="login">Revenir à la page de connexion</a>
           <input type='submit' name='submitLogin' value="Envoyer l'email de vérification" className="submitLogin" required/>
         </div>
-      </header>
+      </div>
     </div>
   );
 }

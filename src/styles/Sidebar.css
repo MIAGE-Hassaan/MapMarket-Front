@@ -1,44 +1,61 @@
+.Sidebar {
+  z-index: 1;
+  left: 0;
+  top: 0;
+  position: fixed;
+  width: 25%;
+}
+
 .custom-sidebar {
-  background-color: white !important;
+  background-color: white;
   border-right: 0.2vw solid #e0e0e0;
   box-shadow: 0.2vw 0.2vw 1vw 0vw rgb(205, 205, 205);
-  height: 100vh;
 }
-.menu-toggle{
+
+.menu-toggle {
   display: flex;
   align-items: center;
   text-align: center;
 }
-.ps-menu-button{
+
+.ps-menu-button {
   display: flex;
   align-items: center;
-  width: 100%;
   justify-content: space-evenly;
+  width: 100%;
 }
+
 .sidebar-title {
   font-size: 1.5vw;
   font-weight: bold;
   color: #4a90e2;
   font-family: "Merriweather Sans";
 }
+
 .ps-menu-button:hover {
   opacity: 60%;
 }
+
 .ps-menu-button a {
   text-decoration: none;
   color: black;
   margin-left: 20%;
 }
 
-.logout-icon {
-  color: red !important;
+.sidebar-icon {
+  width: 2.5vw;
+  height: 2.5vw;
 }
-.ps-menu-icon{
-  font-size: 2vw;
-}
-.main-links{
+
+.main-links {
   margin-top: 20vh;
 }
-.option-links{
+
+.option-links {
   margin-top: 20vh;
+}
+
+/* Styles pour les smartphones */
+@media (max-width: 768px) {
+
 }

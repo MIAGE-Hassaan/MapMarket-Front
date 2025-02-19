@@ -1,0 +1,111 @@
+.Tasks {
+    padding: 2%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    background-color: #f4f4f4;
+    border-radius: 0.2vw;
+    height: 35vw;
+    overflow-y: auto;
+}
+
+.filters {
+    display: flex;
+    gap: 4%;
+    margin-bottom: 2%;
+}
+
+.filters label {
+    display: flex;
+    align-items: center;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4%;
+}
+
+.task-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #e0e0e0;
+    border-radius: 0.2vw;
+    font-weight: bold;
+    border-radius: 0.2vw;
+}
+
+.task-panel {
+    margin-top: 5%;
+    display: flex;
+    align-items: center;
+    padding: 1%;
+    background-color: #fff;
+    border-radius: 0.2vw;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-panel .status-indicator {
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    margin-right: 4%;
+}
+
+.task-panel.urgent .status-indicator {
+    background-color: #FC4E38;
+}
+
+.task-panel.attente .status-indicator {
+    background-color: #FFAC4E;
+}
+
+.task-cell {
+    flex: 1;
+    padding: 5px;
+}
+
+.task-status {
+    margin-left: auto;
+    margin-right: 1%;
+}
+
+.task-status.in-progress {
+    color: green;
+}
+
+.task-status.pending {
+    color: orange;
+}
+
+.action-button {
+    padding: 1%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+}
+
+.Tasks {
+    scrollbar-color: #007bff #f4f4f4;
+}
+
+@media (max-width: 768px) {
+    .Tasks{
+        height: auto;
+        width: auto;
+    }
+    .task-list{
+        width: auto;
+        gap: 2%;
+    }
+    .task-header{
+        width: auto;
+    }
+    .task-panel{
+        width: auto;
+    }
+}

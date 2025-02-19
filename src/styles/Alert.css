@@ -1,0 +1,49 @@
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.alert-box {
+    background: white;
+    padding: 4%;
+    border-radius: 1vw;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 30%;
+}
+
+.alert-buttons {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20%;
+    justify-content: space-evenly;
+}
+
+.confirm-button, .cancel-button {
+    padding: 2%;
+    margin: 5%;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+}
+
+.confirm-button {
+    background-color: #4879F6;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #D9D9D9;
+    color: black;
+}
+.confirm-button:hover, .cancel-button:hover{
+    opacity: 80%;
+}
