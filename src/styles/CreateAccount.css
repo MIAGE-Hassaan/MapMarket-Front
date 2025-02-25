@@ -1,17 +1,14 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
 
 .container {
-    width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 7%;
 }
 
 .form-section {
+    width: 80%;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -20,7 +17,6 @@ body {
 }
 
 h2 {
-    font-size: 22px;
     color: #007bff;
     margin-bottom: 10px;
     font-weight: bold;
@@ -30,11 +26,6 @@ h2 {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
-}
-
-.input-group input,
-.checkbox-label {
-    font-size: 14px;
 }
 
 .input-group input {
@@ -72,11 +63,26 @@ h2 {
 }
 
 .submit-button {
-    width: 100%;
+    width: 50%;
     background: #007bff;
     color: white;
     border: none;
     padding: 10px;
     border-radius: 5px;
+}
+.submit-button:hover{
+    opacity: 80%;
     cursor: pointer;
+}
+
+/* Styles pour les smartphones */
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+        margin-top: 10%;
+        margin-left: 7%;
+    }
+    .form-section {
+        width: 100%;
+    }
 }

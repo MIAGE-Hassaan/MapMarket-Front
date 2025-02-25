@@ -14,6 +14,8 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Connexion";
       case "/tasks":
         return "Alertes";
+      case "/createAccount":
+        return "Compte utilisateur";
       default:
         return ".";
     }
@@ -23,7 +25,7 @@ function Navbar({ collapsed, toggleSidebar }) {
 
   return (
     <div className="Navbar">
-      <h2 className="navbar-title">{title}</h2>
+      <h4 className="navbar-title">{title}</h4>
       <div className="user-navbar-infos">
         <button>
           <img src="../assets/notification-2-line.png" alt="logo" className="input-icon" />
