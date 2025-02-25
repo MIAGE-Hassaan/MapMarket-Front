@@ -1,15 +1,32 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell as faRegularBell, faBars} from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
 import "../styles/Navbar.css";
 
 function Navbar({ collapsed, toggleSidebar }) {
+  const location = useLocation();
+
+  // Fonction pour déterminer le titre en fonction de l'URL
+  const getTitle = (pathname) => {
+    switch (pathname) {
+      case "/map":
+        return "Cartographie";
+      case "/login":
+        return "Connexion";
+      case "/tasks":
+        return "Alertes";
+      default:
+        return ".";
+    }
+  };
+
+  const title = getTitle(location.pathname);
+
   return (
     <div className="Navbar">
-      <h2 className="navbar-title">Alertes</h2>
+      <h2 className="navbar-title">{title}</h2>
       <div className="user-navbar-infos">
         <button>
-          <FontAwesomeIcon icon={faRegularBell} className="input-icon" />
+          <img src="../assets/notification-2-line.png" alt="logo" className="input-icon" />
         </button>
         <div className="user-name-navbar">
           <img src="../assets/user.jpg" alt="User" />

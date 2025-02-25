@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
+import "../styles/Layout.css";
 
 const Layout = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar />
-      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1}}>
+    <div className="layout">
+      <Sidebar collapsed={!collapsed} toggleSidebar={toggleSidebar} />
+      <div className={`main-content ${!collapsed ? "collapsed" : ""}`}>
         <Navbar />
-        <main style={{ flexGrow: 1, overflowY: "auto" }}>
+        <main className="content">
           <Outlet />
         </main>
       </div>

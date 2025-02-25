@@ -5,11 +5,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-<<<<<<< HEAD
 import Tasks from "./pages/Tasks";
-=======
-import CreateAccount from "./pages/CreateAccount";
->>>>>>> 768ca1b4df58ad8f99b88d550d78beb44dad6e5b
+import Map from "./pages/Map";
 
 function App() {
   return (
@@ -17,19 +14,12 @@ function App() {
       <Routes>
         {/* Layout contient la Sidebar */}
         <Route path="/" element={<Layout />}>
-<<<<<<< HEAD
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="forgotPassword" element={<ForgotPassword />} />
           <Route path="resetPassword" element={<ResetPassword />} />
           <Route path="tasks" element={<Tasks/>}/>
-=======
-          <Route index element={<Home />} /> {/* Page d'accueil */}
-          <Route path="login" element={<Login />} /> {/* Page Login */}
-          <Route path="forgotPassword" element={<ForgotPassword />} /> {/* Page ForgotPassword */}
-          <Route path="resetPassword" element={<ResetPassword />} /> {/* Page ResetPassword */}
-          <Route path="createAccount" element={<CreateAccount />} /> {/* Page CreateAccount */}
->>>>>>> 768ca1b4df58ad8f99b88d550d78beb44dad6e5b
+          <Route path="map" element={<Map/>}/>
         </Route>
       </Routes>
     </Router>

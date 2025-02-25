@@ -1,61 +1,77 @@
-.Sidebar {
+.sidebar {
+  background-color: white;
+  border-right: 0.2vw solid #e0e0e0;
+  box-shadow: 0.2vw 0.2vw 1vw 0vw rgb(205, 205, 205);
   z-index: 1;
   left: 0;
   top: 0;
   position: fixed;
-  width: 25%;
-}
-
-.custom-sidebar {
-  background-color: white;
-  border-right: 0.2vw solid #e0e0e0;
-  box-shadow: 0.2vw 0.2vw 1vw 0vw rgb(205, 205, 205);
-}
-
-.menu-toggle {
+  width: 20%;
+  height: 100vh;
+  transition: width 0.3s;
   display: flex;
-  align-items: center;
-  text-align: center;
+  flex-direction: column;
 }
 
-.ps-menu-button {
-  display: flex;
+.sidebar.collapsed {
+  width: 5%; /* Largeur réduite en mode non déployé */
   align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
 }
 
 .sidebar-title {
-  font-size: 1.5vw;
-  font-weight: bold;
-  color: #4a90e2;
-  font-family: "Merriweather Sans";
+  display: flex;
+  align-items: center;
+  padding: 5%;
+  cursor: pointer;
 }
 
-.ps-menu-button:hover {
-  opacity: 60%;
+.sidebar-title h4 {
+  color: #4879F6;
+  margin-left: 10px; /* Ajoutez une marge pour espacer le texte de l'icône */
 }
 
-.ps-menu-button a {
+.sidebar-main-link,
+.sidebar-option-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* Alignez les éléments au début */
   text-decoration: none;
-  color: black;
-  margin-left: 20%;
+  color: #757575;
+  font-family: Arial, sans-serif;
+  padding:5%;
 }
 
-.sidebar-icon {
-  width: 2.5vw;
-  height: 2.5vw;
+.sidebar-main-links{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10vw;
+}
+.sidebar-option-links {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 5vw;
 }
 
-.main-links {
-  margin-top: 20vh;
+.sidebar-main-links a,
+.sidebar-option-links a {
+  display: flex;
+  align-items: center;
 }
 
-.option-links {
-  margin-top: 20vh;
+.sidebar-main-links img,
+.sidebar-title img,
+.sidebar-option-links img {
+  width: 3vw;
+  height: 3vw;
+  margin-right: 10px; /* Espacement entre l'icône et le texte */
 }
 
-/* Styles pour les smartphones */
-@media (max-width: 768px) {
-
+.sidebar-main-link:hover,
+.sidebar-option-link:hover {
+  opacity: 80%;
+  background-color: #4879F6;
+  cursor: pointer;
 }
