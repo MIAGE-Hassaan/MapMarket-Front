@@ -7,6 +7,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Tasks from "./pages/Tasks";
 import Map from "./pages/Map";
+import EmployeeManagement from "./pages/EmployeeManagement";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="resetPassword" element={<ResetPassword />} />
           <Route path="tasks" element={<Tasks/>}/>
           <Route path="map" element={<Map/>}/>
+          <Route path="employeeManagement" element={<EmployeeManagement/>}/>
         </Route>
       </Routes>
     </Router>
