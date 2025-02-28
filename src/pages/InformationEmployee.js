@@ -1,9 +1,13 @@
 import { useState } from "react";
-import "../styles/InformationEmployee.css"; // Ajoute du style pour le modal
+import "../styles/InformationEmployee.css";
+import {useNavigate, useParams} from "react-router-dom"; // Ajoute du style pour le modal
 
 function InformationEmployee() {
     // État pour suivre l'activité sélectionnée
+    const { prenom, nom } = useParams();
     const [selectedActivity, setSelectedActivity] = useState("quotidienne");
+    const navigate = useNavigate();
+
 
     // Données pour chaque type d'activité
     const dailyData = [
@@ -28,8 +32,8 @@ function InformationEmployee() {
     return (
         <div className="InformationEmployee">
             <div className="hautInformationEmployees">
-                <p className="titre2">Information employé</p>
-                <img className="boutonRetour" src="/assets/BoutonRetour.png" alt="btnRetour" width={30} height={30} />
+                <p className="titre2">Information employé de {prenom} {nom}</p>
+                <img className="boutonRetour" src="/assets/BoutonRetour.png" alt="btnRetour" width={30} height={30} onClick={() => navigate("/EmployeeManagement")}/>
             </div>
             <div className="buttons">
                 <button

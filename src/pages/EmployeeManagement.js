@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import "../styles/EmployeeManagement.css"; // Ajoute du style pour le modal
+import "../styles/EmployeeManagement.css";
+import {useNavigate} from "react-router-dom"; // Ajoute du style pour le modal
 
 function EmployeeManagement() {
     const [employees, setEmployees] = useState([]);
     const [newEmployee, setNewEmployee] = useState({ nom: "", prenom: "" });
     const [employeeToDelete, setEmployeeToDelete] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchEmployees();
@@ -48,6 +50,9 @@ function EmployeeManagement() {
         // Tu peux envoyer une requête API ici pour ajouter côté serveur
     }
 
+    let eluecque;
+    let Kelian;
+    let kelian;
     return (
         <div className="tab">
             <div className="hautListEmployees">
@@ -72,9 +77,10 @@ function EmployeeManagement() {
                         <td>{employee.id}</td>
                         <td>
                             <img className="icone"
-                                src="/assets/oeil.png"
-                                width="30"
-                                alt="Voir plus"/>
+                                 src="/assets/oeil.png"
+                                 width="30"
+                                 alt="Voir plus"
+                                 onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}/>
                         </td>
                         <td>
                             <img
@@ -83,11 +89,33 @@ function EmployeeManagement() {
                                 width="30"
                                 alt="Supprimer"
                                 onClick={() => deleteEmployee(employee.id, employee.nom, employee.prenom)}
-                                style={{ cursor: "pointer" }}
+                                style={{cursor: "pointer"}}
                             />
                         </td>
                     </tr>
                 ))}
+                <tr key={Kelian}>
+                    <td>eluecque</td>
+                    <td>kelian</td>
+                    <td>99</td>
+                    <td>
+                        <img className="icone"
+                             src="/assets/oeil.png"
+                             width="30"
+                             alt="Voir plus"
+                             onClick={() => navigate(`/InformationEmployee/eluecque/kelian`)}/>
+                    </td>
+                    <td>
+                        <img
+                            className="icone"
+                            src="/assets/filled-trash.png"
+                            width="30"
+                            alt="Supprimer"
+                            onClick={() => deleteEmployee(99, eluecque, kelian)}
+                            style={{cursor: "pointer"}}
+                        />
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

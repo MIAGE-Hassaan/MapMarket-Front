@@ -23,7 +23,7 @@ function App() {
           <Route path="tasks" element={<Tasks/>}/>
           <Route path="map" element={<Map/>}/>
           <Route path="employeeManagement" element={<EmployeeManagement/>}/>
-          <Route path="informationEmployee" element={<InformationEmployee/>}/>
+          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee/>}/>
         </Route>
       </Routes>
     </Router>
