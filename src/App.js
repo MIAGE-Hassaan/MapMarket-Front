@@ -7,6 +7,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Tasks from "./pages/Tasks";
 import Map from "./pages/Map";
+import CreateAccount from "./pages/CreateAccount";
+import GestionStock from "./pages/GestionStocks";
+
 
 function App() {
   return (
@@ -20,6 +23,8 @@ function App() {
           <Route path="resetPassword" element={<ResetPassword />} />
           <Route path="tasks" element={<Tasks/>}/>
           <Route path="map" element={<Map/>}/>
+          <Route path="createAccount" element={<CreateAccount />}/>
+          <Route path="gestionStocks" element={<GestionStock />}/>
         </Route>
       </Routes>
     </Router>

@@ -10,7 +10,7 @@ function CreateAccount() {
         selectedCategories: [],
     });
 
-    const categories = ["Rayon 1", "Rayon 2", "Rayon 3", "Rayon 4","Rayon 5", "Rayon 6", "Rayon 7", "Rayon 8","Rayon 9", "Rayon 10"];
+    const categories = ["Rayon 1", "Rayon 2", "Rayon 3", "Rayon 4","Rayon 5", "Rayon 6", "Rayon 7", "Rayon 8","Rayon 9", "Rayon 10","Rayon 11", "Rayon 12", "Rayon 13","Rayon 14", "Rayon 15"];
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
