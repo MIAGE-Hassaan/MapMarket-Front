@@ -56,13 +56,13 @@ function EmployeeManagement() {
             </div>
             <table>
                 <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>ID Employé</th>
-                    <th>Information</th>
-                    <th>Supprimer</th>
-                </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>ID Employé</th>
+                        <th>Information</th>
+                        <th>Supprimer</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {employees.map(employee => (

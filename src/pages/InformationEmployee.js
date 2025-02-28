@@ -1,72 +1,64 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../styles/InformationEmployee.css"; // Ajoute du style pour le modal
 
-function InformationEmployee(props) {
+function InformationEmployee() {
+    // État pour suivre l'activité sélectionnée
+    const [selectedActivity, setSelectedActivity] = useState("quotidienne");
 
+    // Données pour chaque type d'activité
+    const dailyData = [
+        { product: "Pâtes tagliatelle", quantity: 25, time: "11:50" },
+        { product: "Sauce tomate", quantity: 15, time: "10:00" },
+        { product: "Lardons", quantity: 30, time: "16:03" },
+        { product: "Pain", quantity: 12, time: "14:33" },
+        { product: "Savon", quantity: 9, time: "08:20" }
+    ];
 
+    const weeklyData = [
+        { product: "Farine", quantity: 50, time: "Lundi" },
+        { product: "Sucre", quantity: 40, time: "Mardi" },
+        { product: "Beurre", quantity: 35, time: "Mercredi" },
+        { product: "Œufs", quantity: 60, time: "Jeudi" },
+        { product: "Lait", quantity: 20, time: "Vendredi" }
+    ];
 
+    // Sélection des données en fonction de l'activité choisie
+    const displayedData = selectedActivity === "quotidienne" ? dailyData : weeklyData;
 
-
-
-
-
-    return(
-        <div className={"InformationEmployee"}>
-            <div className={"hautInformationEmployees"}>
-                <p className={"titre2"}>Information employé</p>
-                <img  className={"boutonRetour"} src="/assets/BoutonRetour.png" alt="btnRetour" width={30} height={30} />
+    return (
+        <div className="InformationEmployee">
+            <div className="hautInformationEmployees">
+                <p className="titre2">Information employé</p>
+                <img className="boutonRetour" src="/assets/BoutonRetour.png" alt="btnRetour" width={30} height={30} />
             </div>
-            <div className={"buttons"}>
-
+            <div className="buttons">
+                <button
+                    className={`button ${selectedActivity === "quotidienne" ? "active" : ""}`}
+                    onClick={() => setSelectedActivity("quotidienne")}>Activité quotidienne</button>
+                <button
+                    className={`button ${selectedActivity === "hebdomadaire" ? "active" : ""}`}
+                    onClick={() => setSelectedActivity("hebdomadaire")}>Activité hebdomadaire</button>
             </div>
             <table>
                 <thead>
                 <tr>
                     <th>Produits</th>
                     <th>Quantité</th>
-                    <th>Heure</th>
+                    <th>{selectedActivity === "quotidienne" ? "Heure" : "Jour"}</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Pâtes tagliatelle</td>
-                    <td>25</td>
-                    <td>11:50</td>
-                </tr>
-                <tr>
-                    <td>Sauce tomate</td>
-                    <td>15</td>
-                    <td>10:00</td>
-                </tr>
-                <tr>
-                    <td>Lardons</td>
-                    <td>30</td>
-                    <td>16:03</td>
-                </tr>
-                <tr>
-                    <td>Pain</td>
-                    <td>12</td>
-                    <td>14:33</td>
-                </tr>
-                <tr>
-                    <td>Savon</td>
-                    <td>9</td>
-                    <td>08:20</td>
-                </tr>
-                <tr>
-                    <td>Gel douche</td>
-                    <td>2</td>
-                    <td>12:02</td>
-                </tr>
-                <tr>
-                    <td>Serviette de bain</td>
-                    <td>10</td>
-                    <td>17:30</td>
-                </tr>
+                {displayedData.map((item, index) => (
+                    <tr key={index}>
+                        <td>{item.product}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.time}</td>
+                    </tr>
+                ))}
                 </tbody>
             </table>
-
-</div>
-)
+        </div>
+    );
 }
-export default InformationEmployee
+
+export default InformationEmployee;
