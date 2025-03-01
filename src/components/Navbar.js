@@ -12,6 +12,8 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Cartographie";
       case "/login":
         return "Connexion";
+      case "/":
+        return "Accueil";
       case "/tasks":
         return "Alertes";
       case "/createAccount":
