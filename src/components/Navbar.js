@@ -29,9 +29,9 @@ function Navbar({ collapsed, toggleSidebar }) {
     <div className="Navbar">
       <h4 className="navbar-title">{title}</h4>
       <div className="user-navbar-infos">
-        <button>
+        <a href="tasks">
           <img src="../assets/notification-2-line.png" alt="logo" className="input-icon" />
-        </button>
+        </a>
         <div className="user-name-navbar">
           <img src="../assets/user.jpg" alt="User" />
           <h3>Employé</h3>
