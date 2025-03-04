@@ -1,34 +1,38 @@
 import { useEffect, useState } from "react";
 import "../styles/EmployeeManagement.css";
-import {useNavigate} from "react-router-dom"; // Ajoute du style pour le modal
+import {useNavigate} from "react-router-dom";
+import * as console from "node:console"; // Ajoute du style pour le modal
 
 function EmployeeManagement() {
     const [employees, setEmployees] = useState([]);
     const [newEmployee, setNewEmployee] = useState({ nom: "", prenom: "" });
     const [employeeToDelete, setEmployeeToDelete] = useState(null);
     const navigate = useNavigate();
+    const userService = require('../services/userService');
 
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
 
     async function fetchEmployees() {
         try {
-            const response = await fetch("https://api.example.com/employees"); // Remplace par ton API
-            const data = await response.json();
+            const users = await userService.getAllUsers()
+            const data = await users.json();
             setEmployees(data);
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error);
         }
     }
 
-    function deleteEmployee(id, nom, prenom) {
+    async function deleteEmployee(id, nom, prenom) {
         const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);
         if (confirmation) {
-            setEmployees(employees.filter(employee => employee.id !== id));
+            try{
+                await userService.deleteUser(id, nom, prenom);
+            }catch (error){
+                console.error("Erreur lors de la suppression de l'employé :", error);
+            }
             console.log(`Employé avec l'ID ${id} supprimé.`);
-            // Tu peux aussi ajouter une requête API pour supprimer côté serveur.
+
         }
+        await fetchEmployees();
     }
 
     function addEmployee() {
@@ -49,6 +53,10 @@ function EmployeeManagement() {
 
         // Tu peux envoyer une requête API ici pour ajouter côté serveur
     }
+
+    useEffect(() => {
+        fetchEmployees();
+    }, []);
 
     let eluecque;
     let Kelian;
@@ -94,7 +102,7 @@ function EmployeeManagement() {
                         </td>
                     </tr>
                 ))}
-                <tr key={Kelian}>
+                <tr key={99}>
                     <td>eluecque</td>
                     <td>kelian</td>
                     <td>99</td>
@@ -111,7 +119,7 @@ function EmployeeManagement() {
                             src="/assets/filled-trash.png"
                             width="30"
                             alt="Supprimer"
-                            onClick={() => deleteEmployee(99, eluecque, kelian)}
+                            onClick={() => deleteEmployee("99", "eluecque", "kelian")}
                             style={{cursor: "pointer"}}
                         />
                     </td>
