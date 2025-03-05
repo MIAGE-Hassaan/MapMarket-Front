@@ -35,7 +35,7 @@ function Login() {
       localStorage.setItem("token", response.data.token);
 
       // Rediriger l'utilisateur vers la page /user après une connexion réussie
-      navigate("/user");
+      navigate("/map");
     } catch (error) {
       setError("Erreur de connexion. Veuillez vérifier vos informations.");
       console.error("Erreur de connexion :", error);
