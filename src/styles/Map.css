@@ -47,6 +47,10 @@
   width: fit-content; 
   text-align: center;
 }
+.fenetre-alerte a:hover{
+  opacity: 80%;
+  cursor: pointer;
+}
 
 .bouton-fermeture {
   cursor: pointer;

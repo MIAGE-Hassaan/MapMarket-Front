@@ -21,7 +21,30 @@ function Login() {
       // Rediriger vers la page /user si le token est présent
       navigate("/user");
     }
+
+    // Configurer le compteur d'inactivité
+    const resetInactivityTimeout = () => {
+      clearTimeout(inactivityTimeout);
+      inactivityTimeout = setTimeout(() => {
+        // Supprimer le token et rediriger vers la page de connexion
+        localStorage.removeItem("token");
+        navigate("/login");
+      }, 15 * 60 * 1000); // 15 minutes d'inactivité
+    };
+
+    // Écouter les événements d'activité de l'utilisateur
+    window.addEventListener("mousemove", resetInactivityTimeout);
+    window.addEventListener("keypress", resetInactivityTimeout);
+
+    // Nettoyer les écouteurs d'événements lorsque le composant est démonté
+    return () => {
+      window.removeEventListener("mousemove", resetInactivityTimeout);
+      window.removeEventListener("keypress", resetInactivityTimeout);
+      clearTimeout(inactivityTimeout);
+    };
   }, [navigate]);
+
+  let inactivityTimeout;
 
   const handleSubmit = async (event) => {
     event.preventDefault();

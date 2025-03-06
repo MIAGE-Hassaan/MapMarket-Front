@@ -5,18 +5,23 @@ import '../styles/Map.css';
 const SvgMap = () => {
   const [data, setData] = useState({ secteurs: [] });
   const [showModal, setShowModal] = useState(false);
-  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [stockInfo, setStockInfo] = useState([]);
   const [error, setError] = useState(null);
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Token non trouvé');
-        }
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login'; // Rediriger vers la page de connexion
+        return;
+      }
 
+      fetchData(token);
+    };
+
+    const fetchData = async (token) => {
+      try {
         const [secteursResponse, rayonsResponse, produitsResponse] = await Promise.all([
           axios.get('http://mapmarketapi.test/api/secteurs', {
             headers: { Authorization: `Bearer ${token}` },
@@ -55,12 +60,50 @@ const SvgMap = () => {
       }
     };
 
-    fetchData();
+    checkAuth();
   }, []);
 
+  useEffect(() => {
+    const saveAlerts = async () => {
+      const newAlerts = [];
+
+      data.secteurs.forEach(secteur => {
+        secteur.rayons.forEach(rayon => {
+          rayon.produits.forEach(produit => {
+            if (produit.quantite <= produit.seuil) {
+              newAlerts.push({
+                quantite: produit.quantite,
+                produit_ref: produit.ref,
+                statut_slug: 'En attente'
+              });
+            }
+          });
+        });
+      });
+
+      if (newAlerts.length > 0) {
+        console.log('Alertes à envoyer :', newAlerts); // Affiche les alertes avant l'envoi
+
+        try {
+          await axios.post('http://mapmarketapi.test/api/alertes', newAlerts, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          setAlerts(prevAlerts => [...prevAlerts, ...newAlerts]);
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi des alertes :', error);
+        }
+      }
+    };
+
+    const intervalId = setInterval(saveAlerts, 300000);
+
+    return () => clearInterval(intervalId);
+  }, [data]);
+
   const handleCircleClick = (event, products) => {
-    const rect = event.target.getBoundingClientRect();
-    setModalPosition({ x: rect.left, y: rect.top });
     setStockInfo(products);
     setShowModal(true);
   };
@@ -178,20 +221,20 @@ const SvgMap = () => {
       </svg>
 
       {showModal && (
-      <div className="fenetre-alerte">
-        <h4>Produits en dessous du seuil limite</h4>
-        <div className='produit-alerte'>
-          {stockInfo.map((product, index) => (
-            <div className="produit" key={index}>
-              <p>{product.libelle}</p>
-              <p>{product.quantite} / {product.seuil}</p>
-              <a href={`/addTask/${product.uuid}`}>Faire</a>
-            </div>
-          ))}
+        <div className="fenetre-alerte">
+          <h4>Produits en dessous du seuil limite</h4>
+          <div className='produit-alerte'>
+            {stockInfo.map((product, index) => (
+              <div className="produit" key={index}>
+                <p>{product.libelle}</p>
+                <p>{product.quantite} / {product.seuil}</p>
+                <a href={`/addTask/${product.uuid}`}>Faire</a>
+              </div>
+            ))}
+          </div>
+          <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
         </div>
-        <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
-      </div>
-    )}
+      )}
     </>
   );
 };
