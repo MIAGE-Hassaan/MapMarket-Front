@@ -58,9 +58,6 @@ function EmployeeManagement() {
         fetchEmployees();
     }, []);
 
-    let eluecque;
-    let Kelian;
-    let kelian;
     return (
         <div className="tab">
             <div className="hautListEmployees">
