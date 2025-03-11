@@ -1,6 +1,6 @@
 import React from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../services/authService";
 import "../styles/Sidebar.css";
 
 const Sidebar = ({ collapsed, toggleSidebar }) => {
@@ -8,24 +8,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
   const isLoggedIn = !!localStorage.getItem("token");
 
   const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "http://mapmarketapi.test/api/logout?Accept=application/json",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      // Supprimer le token du localStorage
-      localStorage.removeItem("token");
-      // Rediriger l'utilisateur vers la page de connexion
-      navigate("/login");
-    } catch (error) {
-      console.error("Erreur lors de la déconnexion :", error);
-    }
+    await logoutUser(navigate);
   };
 
   return (

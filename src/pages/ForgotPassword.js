@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../styles/ForgotPassword.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser as faRegularUser } from "@fortawesome/free-regular-svg-icons";
@@ -6,15 +7,25 @@ import { faUser as faRegularUser } from "@fortawesome/free-regular-svg-icons";
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simuler l'envoi d'un e-mail
-    setMessage(`Un e-mail de réinitialisation a été envoyé à ${email}`);
-    // Rediriger vers la page de réinitialisation après un délai
-    setTimeout(() => {
-      window.location.href = "/resetPassword";
-    }, 3000);
+    setError("");
+    setMessage("");
+
+    if (!email) {
+      setError("Veuillez entrer votre adresse email.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/request-reset", { email });
+      setMessage(response.data.message || "Email de réinitialisation envoyé !");
+    } catch (error) {
+      setError("Une erreur s'est produite. Veuillez réessayer.");
+      console.error("Erreur lors de l'envoi de l'email de réinitialisation :", error);
+    }
   };
 
   return (
@@ -35,6 +46,7 @@ function ForgotPassword() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              aria-required="true"
             />
           </div>
           <a href="login">Revenir à la page de connexion</a>
@@ -44,9 +56,9 @@ function ForgotPassword() {
             value="Envoyer l'email de vérification"
             className="submitLogin"
             onClick={handleSubmit}
-            required
           />
-          {message && <p>{message}</p>}
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-message">{error}</p>}
         </div>
       </div>
     </div>

@@ -1,69 +1,20 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import useLogin from "../hooks/useLogin";
 import "../styles/Login.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser as faRegularUser,
-  faBell as faRegularBell
-} from "@fortawesome/free-regular-svg-icons";
+import { faUser as faRegularUser, faBell as faRegularBell } from "@fortawesome/free-regular-svg-icons";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { email, setEmail, password, setPassword, error, responseData, handleSubmit, isLoading } = useLogin();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté
+  React.useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Rediriger vers la page /user si le token est présent
       navigate("/user");
     }
-
-    // Configurer le compteur d'inactivité
-    const resetInactivityTimeout = () => {
-      clearTimeout(inactivityTimeout);
-      inactivityTimeout = setTimeout(() => {
-        // Supprimer le token et rediriger vers la page de connexion
-        localStorage.removeItem("token");
-        navigate("/login");
-      }, 15 * 60 * 1000); // 15 minutes d'inactivité
-    };
-
-    // Écouter les événements d'activité de l'utilisateur
-    window.addEventListener("mousemove", resetInactivityTimeout);
-    window.addEventListener("keypress", resetInactivityTimeout);
-
-    // Nettoyer les écouteurs d'événements lorsque le composant est démonté
-    return () => {
-      window.removeEventListener("mousemove", resetInactivityTimeout);
-      window.removeEventListener("keypress", resetInactivityTimeout);
-      clearTimeout(inactivityTimeout);
-    };
   }, [navigate]);
-
-  let inactivityTimeout;
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(""); // Réinitialiser le message d'erreur à chaque tentative
-    try {
-      const response = await axios.post("http://mapmarketapi.test/api/login", {
-        email,
-        password,
-      });
-      // Sauvegarder le token dans le localStorage
-      localStorage.setItem("token", response.data.token);
-
-      // Rediriger l'utilisateur vers la page /user après une connexion réussie
-      navigate("/map");
-    } catch (error) {
-      setError("Erreur de connexion. Veuillez vérifier vos informations.");
-      console.error("Erreur de connexion :", error);
-    }
-  };
 
   return (
     <div className="Login">
@@ -106,9 +57,16 @@ function Login() {
             name="submitLogin"
             value="Se connecter"
             className="submitLogin"
+            disabled={isLoading}
             required
           />
           {error && <p className="error">{error}</p>}
+          {responseData && (
+            <div className="response-data">
+              <h3>Réponse de la requête de connexion :</h3>
+              <pre>{JSON.stringify(responseData, null, 2)}</pre>
+            </div>
+          )}
         </form>
       </div>
     </div>

@@ -8,15 +8,33 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const email = new URLSearchParams(window.location.search).get('email');
+    const token = new URLSearchParams(window.location.search).get('token');
+
     if (password === confirmPassword) {
-      // Simuler la réinitialisation du mot de passe
-      setMessage("Mot de passe modifié avec succès");
-      // Rediriger vers la page de connexion après un délai
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 3000);
+      try {
+        const response = await fetch(`/api/users-basics/${email}/password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token, password }),
+        });
+
+        if (response.ok) {
+          setMessage("Mot de passe modifié avec succès");
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 3000);
+        } else {
+          const data = await response.json();
+          setMessage(data.message || "Erreur lors de la réinitialisation du mot de passe.");
+        }
+      } catch (error) {
+        setMessage("Une erreur s'est produite. Veuillez réessayer.");
+      }
     } else {
       setMessage("Les mots de passe ne correspondent pas");
     }
@@ -62,7 +80,6 @@ function ResetPassword() {
             value="Changer de mot de passe"
             className="submitLogin"
             onClick={handleSubmit}
-            required
           />
         </div>
       </div>

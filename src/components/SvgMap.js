@@ -74,7 +74,7 @@ const SvgMap = () => {
               newAlerts.push({
                 quantite: produit.quantite,
                 produit_ref: produit.ref,
-                statut_slug: 'En attente'
+                statut_slug: 'nouveau'
               });
             }
           });
@@ -98,7 +98,7 @@ const SvgMap = () => {
       }
     };
 
-    const intervalId = setInterval(saveAlerts, 300000);
+    const intervalId = setInterval(saveAlerts, 3000);
 
     return () => clearInterval(intervalId);
   }, [data]);
