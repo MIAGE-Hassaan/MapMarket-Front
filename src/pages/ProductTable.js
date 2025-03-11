@@ -6,30 +6,36 @@ export default function ProductTable({ products, search, onDelete }) {
         <table className="product-table">
             <thead>
             <tr>
-                <th>Nom du produit</th>
+                <th>Référence</th>
+                <th>Libellé</th>
+                <th>Prix</th>
+                <th>Capacité</th>
+                <th>Quantité</th>
+                <th>Seuil</th>
                 <th>Rayon</th>
                 <th>Secteur</th>
-                <th>Stock</th>
-                <th>Seuil</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             {products
-                .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+                .filter((p) => p.libelle.toLowerCase().includes(search.toLowerCase()))
                 .map((product) => (
-                    <tr key={product.id}>
-                        <td>{product.name}</td>
+                    <tr key={product.ref}>
+                        <td>{product.ref}</td>
+                        <td>{product.libelle}</td>
+                        <td>{product.prix}</td>
+                        <td>{product.capacite}</td>
+                        <td>{product.quantite}</td>
+                        <td>{product.seuil}</td>
                         <td>{product.rayon}</td>
                         <td>{product.secteur}</td>
-                        <td>{product.stock}</td>
-                        <td>{product.seuil}</td>
                         <td className="actions">
                             <button className="edit-btn">
                                 <Pencil size={16} />
                             </button>
-                            <button className="delete-btn" onClick={() => onDelete(product.id)}>
-                                Supprimer {/* Texte du bouton */}
+                            <button className="delete-btn" onClick={() => onDelete(product.ref)}>
+                                <Trash size={16} />
                             </button>
                         </td>
                     </tr>

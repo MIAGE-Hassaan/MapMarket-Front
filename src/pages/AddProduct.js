@@ -1,59 +1,39 @@
 import { useState } from "react";
 import "../styles/gestionStocks.css";
 
-export default function AddProductForm({ onProductAdded }) {
+export default function AddProduct({ onProductAdded }) {
     const [newProduct, setNewProduct] = useState({
-        name: "",
-        rayon: "",
-        secteur: "",
-        stock: "",
+        ref: "",
+        libelle: "",
+        prix: "",
+        capacite: "",
+        quantite: "",
         seuil: "",
+        rayon: "", // On récupère l'ID du rayon
     });
 
-    const handleAddProduct = () => {
-        if (!newProduct.name || !newProduct.rayon || !newProduct.secteur || !newProduct.stock || !newProduct.seuil) {
+    const handleAddProduct = async () => {
+        if (!newProduct.ref || !newProduct.libelle || !newProduct.prix || !newProduct.capacite || !newProduct.quantite || !newProduct.seuil || !newProduct.rayon) {
             alert("Veuillez remplir tous les champs !");
             return;
         }
 
-        onProductAdded(newProduct);
-        setNewProduct({ name: "", rayon: "", secteur: "", stock: "", seuil: "" });
+        await onProductAdded(newProduct); // Appelle la fonction du parent pour ajouter via l'API
+
+        setNewProduct({ ref: "", libelle: "", prix: "", capacite: "", quantite: "", seuil: "", rayon: "" }); // Réinitialisation
     };
 
     return (
         <div className="add-product-container">
-            <h2>Ajouter un nouveau produit</h2>
+            <h2>Ajouter un produit</h2>
             <div className="form-group">
-                <input
-                    type="text"
-                    placeholder="Nom du produit"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Rayon"
-                    value={newProduct.rayon}
-                    onChange={(e) => setNewProduct({ ...newProduct, rayon: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Secteur"
-                    value={newProduct.secteur}
-                    onChange={(e) => setNewProduct({ ...newProduct, secteur: e.target.value })}
-                />
-                <input
-                    type="text"
-                    placeholder="Emplacement stock"
-                    value={newProduct.stock}
-                    onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
-                />
-                <input
-                    type="number"
-                    placeholder="Seuil minimal"
-                    value={newProduct.seuil}
-                    onChange={(e) => setNewProduct({ ...newProduct, seuil: e.target.value })}
-                />
+                <input type="text" placeholder="Référence" value={newProduct.ref} onChange={(e) => setNewProduct({ ...newProduct, ref: e.target.value })} />
+                <input type="text" placeholder="Libellé" value={newProduct.libelle} onChange={(e) => setNewProduct({ ...newProduct, libelle: e.target.value })} />
+                <input type="number" placeholder="Prix" value={newProduct.prix} onChange={(e) => setNewProduct({ ...newProduct, prix: e.target.value })} />
+                <input type="number" placeholder="Capacité" value={newProduct.capacite} onChange={(e) => setNewProduct({ ...newProduct, capacite: e.target.value })} />
+                <input type="number" placeholder="Quantité" value={newProduct.quantite} onChange={(e) => setNewProduct({ ...newProduct, quantite: e.target.value })} />
+                <input type="number" placeholder="Seuil" value={newProduct.seuil} onChange={(e) => setNewProduct({ ...newProduct, seuil: e.target.value })} />
+                <input type="number" placeholder="ID Rayon" value={newProduct.rayon} onChange={(e) => setNewProduct({ ...newProduct, rayon: e.target.value })} />
             </div>
             <button className="add-btn" onClick={handleAddProduct}>Ajouter</button>
         </div>
