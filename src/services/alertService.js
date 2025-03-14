@@ -9,7 +9,7 @@ export const fetchAlerts = async () => {
   }
 
   try {
-    const [alertsResponse, rayonsResponse, secteursResponse, produitsResponse] = await Promise.all([
+    const [alertsResponse] = await Promise.all([
       axios.get(`${API_BASE_URL}/alertes`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -33,14 +33,11 @@ export const fetchAlerts = async () => {
     ]);
 
     const alerts = alertsResponse.data.data || [];
-    const rayons = rayonsResponse.data.data || [];
-    const secteurs = secteursResponse.data.data || [];
-    const produits = produitsResponse.data.data || [];
 
     const alertsWithDetails = alerts.map((alert) => {
-      const produit = produits.find((p) => p.uuid === alert.produit.uuid);
-      const rayon = rayons.find((r) => r.id === produit?.rayon_id);
-      const secteur = secteurs.find((s) => s.id === rayon?.secteur_id);
+      const produit = alert.produit;
+      const rayon = alert.produit.rayon;
+      const secteur = alert.produit.rayon.secteur;
 
       return {
         ...alert,

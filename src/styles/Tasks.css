@@ -61,13 +61,18 @@
     margin-right: 4%;
 }
 
-.task-panel.urgent .status-indicator {
-    background-color: #FC4E38;
+.status-indicator.nouveau {
+    background-color: red;
 }
 
-.task-panel.attente .status-indicator {
-    background-color: #FFAC4E;
+.status-indicator.en-cours {
+    background-color: orange;
 }
+
+.status-indicator.fait {
+    background-color: green;
+}
+
 
 .task-panel .task-cell {
     flex: 1;

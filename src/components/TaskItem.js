@@ -1,9 +1,10 @@
 import React from "react";
+import "../styles/Tasks.css"; // Assurez-vous que ce fichier CSS est correctement importé
 
 function TaskItem({ alert, onValidateClick }) {
   return (
-    <div key={alert.uuid} className={`task-panel ${alert.statut.slug === 'urgent' ? "urgent" : "attente"}`}>
-      <div className="status-indicator"></div>
+    <div key={alert.uuid} className={`task-panel ${alert.statut.slug}`}>
+      <div className={`status-indicator ${alert.statut.slug}`}></div>
       <div className="task-cell">{alert.rayon}</div>
       <div className="task-cell">{alert.secteur}</div>
       <div className="task-cell">{alert.reference}</div>
