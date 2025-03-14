@@ -9,12 +9,7 @@ function Login() {
   const { email, setEmail, password, setPassword, error, responseData, handleSubmit, isLoading } = useLogin();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/user");
-    }
-  }, [navigate]);
+
 
   return (
     <div className="Login">

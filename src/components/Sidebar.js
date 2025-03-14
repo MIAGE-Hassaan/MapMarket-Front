@@ -32,7 +32,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
             {!collapsed && <p>Cartographie</p>}
           </a>
           {isLoggedIn ? (
-            <a href="user" className="sidebar-main-link">
+            <a href="EmployeeManagement" className="sidebar-main-link">
               <img src="../assets/group-line.png" alt="logo" />
               {!collapsed && <p>Compte</p>}
             </a>
