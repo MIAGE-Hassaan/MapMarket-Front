@@ -44,23 +44,45 @@ export const fetchProducts = async () => {
     }
 };
 
-// ✅ Ajouter un produit
+
+
+
 export const addProduct = async (newProduct) => {
     try {
-        // 🔹 Vérifier si le rayon existe
+        // 🔹 Récupérer la liste des rayons
         const rayonResponse = await axios.get(`${API_BASE_URL}/rayons`, getAuthHeaders());
-        const rayon = rayonResponse.data.find((r) => r.id.toString() === newProduct.rayon.toString());
-        if (!rayon) throw new Error("Rayon introuvable.");
+        console.log("Réponse API des rayons:", rayonResponse.data); // Log de la réponse complète
+
+        // 🔹 Vérifier si la réponse contient bien un tableau de rayons
+        const rayons = rayonResponse.data.data; // Accès correct au tableau de rayons
+        if (!Array.isArray(rayons)) {
+            throw new Error("Les rayons ne sont pas dans un tableau.");
+        }
+
+        // 🔹 Chercher le rayon correspondant au libellé
+        const rayon = rayons.find((r) => r.libelle.toLowerCase() === newProduct.rayon.toLowerCase());
+
+        // 🔹 Si le rayon n'existe pas, lancer une erreur
+        if (!rayon) {
+            throw new Error("Rayon introuvable. Veuillez vérifier le libellé du rayon.");
+        }
 
         // 🔹 Envoyer le produit avec le bon `rayon_uuid`
         const productData = { ...newProduct, rayon_uuid: rayon.uuid };
         const response = await axios.post(`${API_BASE_URL}/produits`, productData, getAuthHeaders());
 
-        return response.data;
+        return response.data; // Retourner le produit créé
     } catch (error) {
-        handleApiError(error);
+        console.error("Erreur lors de l'ajout du produit:", error); // Log de l'erreur
+        handleApiError(error); // Gestion des erreurs API
+        throw error; // Relancer l'erreur pour gestion en amont
     }
 };
+
+
+
+
+
 
 // ✅ Supprimer un produit
 export const deleteProduct = async (ref) => {

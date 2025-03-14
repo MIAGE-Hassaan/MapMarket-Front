@@ -33,7 +33,7 @@ export default function AddProduct({ onProductAdded }) {
                 <input type="number" placeholder="Capacité" value={newProduct.capacite} onChange={(e) => setNewProduct({ ...newProduct, capacite: e.target.value })} />
                 <input type="number" placeholder="Quantité" value={newProduct.quantite} onChange={(e) => setNewProduct({ ...newProduct, quantite: e.target.value })} />
                 <input type="number" placeholder="Seuil" value={newProduct.seuil} onChange={(e) => setNewProduct({ ...newProduct, seuil: e.target.value })} />
-                <input type="number" placeholder="ID Rayon" value={newProduct.rayon} onChange={(e) => setNewProduct({ ...newProduct, rayon: e.target.value })} />
+                <input type="text" placeholder="Nom du Rayon" value={newProduct.rayon} onChange={(e) => setNewProduct({ ...newProduct, rayon: e.target.value })} />
             </div>
             <button className="add-btn" onClick={handleAddProduct}>Ajouter</button>
         </div>

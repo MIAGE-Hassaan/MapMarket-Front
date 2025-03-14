@@ -9,20 +9,21 @@ export default function GestionStock() {
     const [search, setSearch] = useState("");
     const [message, setMessage] = useState(null);
 
-    //  Charger les produits depuis l'API
+    // Charger les produits depuis l'API
     useEffect(() => {
         console.log("Chargement des produits...");
         const loadProducts = async () => {
             try {
                 console.log("🔄 fetchProducts() va être appelé !");
                 const response = await fetchProducts();
-                // Assure-toi que la réponse contient la clé 'data' qui est un tableau
                 const productsData = response.data;
+
                 if (!Array.isArray(productsData) || productsData.length === 0) {
                     throw new Error("Aucun produit trouvé ou données mal formatées");
                 }
+
                 console.log("Données des produits :", productsData);
-                setProducts(productsData);  // Mets à jour l'état avec le tableau des produits
+                setProducts(productsData);
             } catch (error) {
                 console.error("Erreur API :", error);
                 setMessage({ type: "error", text: "Erreur lors du chargement des produits." });
@@ -30,7 +31,6 @@ export default function GestionStock() {
         };
 
         loadProducts();
-
     }, []);
 
     // Ajouter un produit
@@ -39,6 +39,7 @@ export default function GestionStock() {
             const createdProduct = await addProduct(newProduct);
             setProducts([...products, createdProduct]);
             setMessage({ type: "success", text: "Produit ajouté avec succès !" });
+            console.log("Message mis à jour :", { type: "success", text: "Produit ajouté avec succès !" });
         } catch (error) {
             setMessage({ type: "error", text: "Erreur lors de l'ajout du produit." });
         }
@@ -54,6 +55,17 @@ export default function GestionStock() {
             setMessage({ type: "error", text: "Erreur lors de la suppression." });
         }
     };
+
+    // Efface la notification après 4 secondes
+    useEffect(() => {
+        if (message) {
+            const timer = setTimeout(() => {
+                setMessage(null);
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
 
     return (
         <div className="gestion-stock-container">
