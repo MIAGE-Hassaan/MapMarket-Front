@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import "../styles/ResetPassword.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell as faRegularBell } from "@fortawesome/free-regular-svg-icons";
 
 function ResetPassword() {
   const [password, setPassword] = useState("");
@@ -51,7 +49,7 @@ function ResetPassword() {
         <div className="recovery-form">
           <label htmlFor="password">Nouveau mot de passe</label>
           <div className="input-display">
-            <FontAwesomeIcon icon={faRegularBell} className="input-icon" />
+          <img src="../assets/lock-password-line.png" alt="password icon"/>
             <input
               type="password"
               name="password"
@@ -63,7 +61,7 @@ function ResetPassword() {
 
           <label htmlFor="password2">Confirmation du mot de passe</label>
           <div className="input-display">
-            <FontAwesomeIcon icon={faRegularBell} className="input-icon" />
+            <img src="../assets/lock-2-line.png" alt="password icon"/>
             <input
               type="password"
               name="password2"

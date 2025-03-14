@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/ForgotPassword.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser as faRegularUser } from "@fortawesome/free-regular-svg-icons";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -39,7 +37,7 @@ function ForgotPassword() {
         <div className="recovery-form">
           <label htmlFor="email">Email</label>
           <div className="input-display">
-            <FontAwesomeIcon icon={faRegularUser} className="input-icon" />
+          <img src="../assets/account-box-line.png" alt="email icon"/>
             <input
               type="email"
               name="email"

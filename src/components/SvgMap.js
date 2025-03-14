@@ -1,107 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import useMapData from '../hooks/useMapData';
+import { updateAlertStatus } from '../services/mapApiService';
 import '../styles/Map.css';
 
 const SvgMap = () => {
-  const [data, setData] = useState({ secteurs: [] });
+  const { data, alerts, error } = useMapData();
   const [showModal, setShowModal] = useState(false);
   const [stockInfo, setStockInfo] = useState([]);
-  const [error, setError] = useState(null);
-  const [alerts, setAlerts] = useState([]);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/login'; // Rediriger vers la page de connexion
-        return;
-      }
-
-      fetchData(token);
-    };
-
-    const fetchData = async (token) => {
-      try {
-        const [secteursResponse, rayonsResponse, produitsResponse] = await Promise.all([
-          axios.get('http://mapmarketapi.test/api/secteurs', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get('http://mapmarketapi.test/api/rayons', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get('http://mapmarketapi.test/api/produits', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-
-        const secteurs = secteursResponse.data.data || [];
-        const rayons = rayonsResponse.data.data || [];
-        const produits = produitsResponse.data.data || [];
-
-        const sortedRayons = rayons.sort((a, b) => {
-          const numA = parseInt(a.uuid.replace(/[^0-9]/g, ''), 10);
-          const numB = parseInt(b.uuid.replace(/[^0-9]/g, ''), 10);
-          return numB - numA;
-        });
-
-        const secteursWithDetails = secteurs.map(secteur => {
-          const secteurRayons = sortedRayons.filter(rayon => rayon.secteur?.uuid === secteur.uuid);
-          const secteurRayonsWithProduits = secteurRayons.map(rayon => {
-            const rayonProduits = produits.filter(produit => produit.rayon?.uuid === rayon.uuid);
-            return { ...rayon, produits: rayonProduits };
-          });
-          return { ...secteur, rayons: secteurRayonsWithProduits };
-        });
-
-        setData({ secteurs: secteursWithDetails });
-      } catch (error) {
-        console.error('Erreur lors de la récupération des données :', error);
-        setError('Erreur lors du chargement des données. Veuillez réessayer plus tard.');
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    const saveAlerts = async () => {
-      const newAlerts = [];
-
-      data.secteurs.forEach(secteur => {
-        secteur.rayons.forEach(rayon => {
-          rayon.produits.forEach(produit => {
-            if (produit.quantite <= produit.seuil) {
-              newAlerts.push({
-                quantite: produit.quantite,
-                produit_ref: produit.ref,
-                statut_slug: 'nouveau'
-              });
-            }
-          });
-        });
-      });
-
-      if (newAlerts.length > 0) {
-        console.log('Alertes à envoyer :', newAlerts); // Affiche les alertes avant l'envoi
-
-        try {
-          await axios.post('http://mapmarketapi.test/api/alertes', newAlerts, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          setAlerts(prevAlerts => [...prevAlerts, ...newAlerts]);
-        } catch (error) {
-          console.error('Erreur lors de l\'envoi des alertes :', error);
-        }
-      }
-    };
-
-    const intervalId = setInterval(saveAlerts, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [data]);
 
   const handleCircleClick = (event, products) => {
     setStockInfo(products);
@@ -110,6 +15,23 @@ const SvgMap = () => {
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const updateTaskStatus = async (productUuid) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token not found');
+      return;
+    }
+
+    try {
+      const alert = alerts.find(alert => alert.produit?.uuid === productUuid);
+      if (alert && alert.statut.slug === "nouveau") {
+        await updateAlertStatus(token, alert.uuid, 'en-cours');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut de la tâche :', error);
+    }
   };
 
   const renderRayonRectangles = (rayonIndex, productsPerRectangle) => {
@@ -126,8 +48,9 @@ const SvgMap = () => {
         { x: 770.492, y: 322.422 }, // Rayon 12
       ][rayonIndex];
 
-      // Filtrer les produits en dessous du seuil
-      const alertProducts = productsInRectangle.filter(product => product.quantite <= product.seuil);
+      const alertProducts = productsInRectangle.filter(product =>
+        alerts.some(alert => alert.produit?.uuid === product.uuid)
+      );
 
       return (
         <g key={rectangleIndex}>
@@ -162,11 +85,7 @@ const SvgMap = () => {
 
   return (
     <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1920 1080"
-      >
-        {/* Secteur Boisson */}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
         <g transform="translate(902 53)">
           <text fill="#5800c5" fontSize={30} fontWeight={400} transform="translate(482.929 56.44)">
             Boisson
@@ -181,8 +100,6 @@ const SvgMap = () => {
             ry={4}
             transform="matrix(.54804 0 0 .6903 482.447 70.722)"
           />
-
-          {/* Rayon 9 */}
           <g transform="rotate(-90 548.226 142.711)">
             <rect width={117.995} height={126.132} fill="#e4e4e4" rx={2} ry={2} transform="matrix(.34144 0 0 2.30019 518.492 119.277)" />
             <text fontSize={30} fontWeight={400} transform="rotate(90 203.24 324.146)">
@@ -190,8 +107,6 @@ const SvgMap = () => {
             </text>
             {renderRayonRectangles(0, 10)}
           </g>
-
-          {/* Rayon 10 */}
           <g transform="rotate(-90 710.729 305.214)">
             <rect width={117.995} height={126.132} fill="#e4e4e4" rx={2} ry={2} transform="matrix(.34144 0 0 2.30019 770.193 119.277)" />
             <text fontSize={30} fontWeight={400} transform="rotate(90 328.906 450.183)">
@@ -199,8 +114,6 @@ const SvgMap = () => {
             </text>
             {renderRayonRectangles(1, 10)}
           </g>
-
-          {/* Rayon 11 */}
           <g transform="rotate(-90 712.814 307.822)">
             <rect width={117.995} height={126.132} fill="#e4e4e4" rx={2} ry={2} transform="matrix(.34144 0 0 2.30019 692.193 119.277)" />
             <text fontSize={30} fontWeight={400} transform="rotate(90 289.293 411.093)">
@@ -208,8 +121,6 @@ const SvgMap = () => {
             </text>
             {renderRayonRectangles(2, 10)}
           </g>
-
-          {/* Rayon 12 */}
           <g transform="rotate(-90 792.556 387.041)">
             <rect width={117.995} height={126.132} fill="#e4e4e4" rx={2} ry={2} transform="matrix(.34144 0 0 2.30019 770.193 119.277)" />
             <text fontSize={30} fontWeight={400} transform="rotate(90 328.906 450.183)">
@@ -222,13 +133,13 @@ const SvgMap = () => {
 
       {showModal && (
         <div className="fenetre-alerte">
-          <h4>Produits en dessous du seuil limite</h4>
+          <h4>Produits liés aux alertes</h4>
           <div className='produit-alerte'>
             {stockInfo.map((product, index) => (
               <div className="produit" key={index}>
                 <p>{product.libelle}</p>
                 <p>{product.quantite} / {product.seuil}</p>
-                <a href={`/addTask/${product.uuid}`}>Faire</a>
+                <button onClick={() => updateTaskStatus(product.uuid)}>Faire</button>
               </div>
             ))}
           </div>

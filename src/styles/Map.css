@@ -37,7 +37,7 @@
   align-items: center;
 }
 
-.fenetre-alerte a {
+.update-task-bouton {
   text-decoration: none;
   background-color: #4879F6;
   color: white;
@@ -46,8 +46,9 @@
   margin-top: 2%; 
   width: fit-content; 
   text-align: center;
+  border: none;
 }
-.fenetre-alerte a:hover{
+.update-task-bouton:hover{
   opacity: 80%;
   cursor: pointer;
 }

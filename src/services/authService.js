@@ -8,14 +8,12 @@ export const loginUser = async (email, password) => {
   });
   const token = response.data.token;
   localStorage.setItem("token", token);
-  console.log("Token reçu et stocké :", token); // Log du token reçu
   return response.data;
 };
 
 export const logoutUser = async (navigate) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token utilisé pour la déconnexion :", token); // Log du token utilisé
     await axios.post(
       "http://mapmarketapi.test/api/logout?Accept=application/json",
       {},
@@ -34,14 +32,12 @@ export const logoutUser = async (navigate) => {
 
 export const getUserInfo = () => {
   const token = localStorage.getItem("token");
-  console.log("Token récupéré pour décodage :", token); // Log du token récupéré
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
-      console.log("Token décodé :", decodedToken); // Log du token décodé
       return {
-        nom: decodedToken.nom,
-        prenom: decodedToken.prenom,
+        nom: decodedToken.user.nom,
+        prenom: decodedToken.user.prenom,
       };
     } catch (error) {
       console.error("Erreur lors du décodage du token :", error);

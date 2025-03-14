@@ -2,8 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
 import "../styles/Login.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser as faRegularUser, faBell as faRegularBell } from "@fortawesome/free-regular-svg-icons";
 
 function Login() {
   const { email, setEmail, password, setPassword, error, responseData, handleSubmit, isLoading } = useLogin();
@@ -27,7 +25,7 @@ function Login() {
         <form className="login-form" onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
           <div className="input-display">
-            <FontAwesomeIcon icon={faRegularUser} className="input-icon" />
+            <img src="../assets/account-box-line.png" alt="email icon"/>
             <input
               type="email"
               name="email"
@@ -38,7 +36,8 @@ function Login() {
           </div>
           <label htmlFor="password">Mot de passe</label>
           <div className="input-display">
-            <FontAwesomeIcon icon={faRegularBell} className="input-icon" />
+            <img src="../assets/lock-2-line.png" alt="password icon"/>
+            
             <input
               type="password"
               name="password"

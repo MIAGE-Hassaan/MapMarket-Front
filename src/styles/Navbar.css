@@ -40,7 +40,7 @@
     border: none;
     color: white;
     cursor: pointer;
-    margin-right: 50%;
+    margin-right: 30%;
     font-size: 1.5vw;
 }
 
@@ -53,6 +53,22 @@
 
 .user-name-navbar h3 {
     color: white;
-    margin-left: 10px;
+    margin-left: 10%;
+    width: auto;
+}
+  
+.notification-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.alert-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
 }
   
