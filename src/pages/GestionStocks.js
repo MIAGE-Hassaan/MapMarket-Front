@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductTable from "./ProductTable";
 import AddProduct from "./AddProduct";
-import { fetchProducts, addProduct, deleteProduct } from "../Services/productService";
+import { fetchProducts, addProduct, deleteProduct } from "../services/productService";
 import "../styles/gestionStocks.css";
 
 export default function GestionStock() {
@@ -11,19 +11,25 @@ export default function GestionStock() {
 
     //  Charger les produits depuis l'API
     useEffect(() => {
+        console.log("Chargement des produits...");
         const loadProducts = async () => {
             try {
-                const data = await fetchProducts();
-                if (!data || data.length === 0) {
-                    throw new Error("Aucun produit trouvé");
+                console.log("🔄 fetchProducts() va être appelé !");
+                const response = await fetchProducts();
+                // Assure-toi que la réponse contient la clé 'data' qui est un tableau
+                const productsData = response.data;
+                if (!Array.isArray(productsData) || productsData.length === 0) {
+                    throw new Error("Aucun produit trouvé ou données mal formatées");
                 }
-                setProducts(data);
+                console.log("Données des produits :", productsData);
+                setProducts(productsData);  // Mets à jour l'état avec le tableau des produits
             } catch (error) {
                 console.error("Erreur API :", error);
                 setMessage({ type: "error", text: "Erreur lors du chargement des produits." });
             }
         };
 
+        loadProducts();
 
     }, []);
 

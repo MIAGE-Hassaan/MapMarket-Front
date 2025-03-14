@@ -1,5 +1,4 @@
-import { Pencil, Trash } from "lucide-react";
-import "../styles/gestionStocks.css";
+import { Pencil, Trash } from 'lucide-react';
 
 export default function ProductTable({ products, search, onDelete }) {
     return (
@@ -28,8 +27,10 @@ export default function ProductTable({ products, search, onDelete }) {
                         <td>{product.capacite}</td>
                         <td>{product.quantite}</td>
                         <td>{product.seuil}</td>
-                        <td>{product.rayon}</td>
-                        <td>{product.secteur}</td>
+                        {/* Affichage de rayon.libelle au lieu de l'objet rayon */}
+                        <td>{product.rayon?.libelle}</td>
+                        {/* Affichage de secteur.libelle au lieu de l'objet secteur */}
+                        <td>{product.rayon?.secteur?.libelle}</td>
                         <td className="actions">
                             <button className="edit-btn">
                                 <Pencil size={16} />
