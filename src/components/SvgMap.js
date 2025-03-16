@@ -60,11 +60,16 @@ const SvgMap = () => {
       if (alert) {
         const newStatus = alert.alert.statut.slug === "nouveau" ? 'en-cours' : 'fait';
         await updateAlertStatus(token, alert.alert.uuid, newStatus);
+
+        if (window.location.pathname === '/map') {
+          window.location.reload();
+        }
       }
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut de la tâche :', error);
     }
   };
+
 
   return (
     <div style={{ position: 'relative' }}>
@@ -363,20 +368,22 @@ const SvgMap = () => {
 
           return (
             <div
-              key={index}
-              style={{
-                position: 'absolute',
-                marginTop:"1%",
-                width: '1vw',
-                height: '1vw',
-                borderRadius: '50%',
-                backgroundColor: circleColor,
-                left: `${rect.left - svgRect.left + rect.width / 2 - 10}px`,
-                top: `${rect.top - svgRect.top - 10}px`,
-                cursor: 'pointer',
-              }}
-              onClick={(e) => handleCircleClick(e, [alert.produit])}
-            />
+            key={index}
+            style={{
+              position: 'absolute',
+              marginTop: "1.2%",
+              marginLeft:"0.2%",
+              width: '1vw',
+              height: '1vw',
+              borderRadius: '50%',
+              backgroundColor: circleColor,
+              left: `${((rect.left - svgRect.left + rect.width / 2 - 10) / svgRect.width) * 100}%`,
+              top: `${((rect.top - svgRect.top - 10) / svgRect.height) * 100}%`,
+              cursor: 'pointer',
+            }}
+            onClick={(e) => handleCircleClick(e, [alert.produit])}
+          />
+
           );
         }
         return null;
