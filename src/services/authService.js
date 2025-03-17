@@ -44,29 +44,40 @@ export const logoutUser = async (navigate) => {
     }
 };
 
-// ✅ Récupération des infos utilisateur avec vérification d'expiration
-export const getUserInfo = () => {
-    const token = getToken();
-    if (!token) {
-        console.warn("⚠️ Aucun token trouvé.");
-        return null;
-    }
-
+// ✅ Étape 1 : Créer un utilisateur (nom, prénom, email)
+export const registerUser = async (userData) => {
     try {
-        const decodedToken = jwtDecode(token);
-        console.log("🔍 Token décodé :", decodedToken);
-
-        // ✅ Vérification si le token est expiré
-        const now = Date.now() / 1000;
-        if (decodedToken.exp && decodedToken.exp < now) {
-            console.warn("⚠️ Le token a expiré !");
-            sessionStorage.removeItem(TOKEN_KEY);
-            return null;
-        }
-
-        return { nom: decodedToken.nom, prenom: decodedToken.prenom };
+        const response = await axios.post(API_URL, userData);
+        return response.data; // Retourne les données utilisateur
     } catch (error) {
-        console.error("❌ Erreur lors du décodage du token :", error.message);
-        return null;
+        console.error("❌ Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// ✅ Étape 2 : Récupérer l'UUID de l'utilisateur en recherchant par email
+export const getUserUuidByEmail = async (email) => {
+    try {
+        const response = await axios.get(API_URL);
+        const users = response.data; // Liste des utilisateurs
+        const user = users.find((u) => u.email === email);
+
+        if (!user) throw new Error("Utilisateur non trouvé");
+
+        return user.uuid; // Retourne l'UUID
+    } catch (error) {
+        console.error("❌ Erreur lors de la récupération de l'UUID :", error.response?.data || error.message);
+        throw error;
+    }
+};
+
+// ✅ Étape 3 : Envoyer le mot de passe une fois l'UUID récupéré
+export const setUserPassword = async (uuid, password) => {
+    try {
+        const response = await axios.post(`${API_URL}/${uuid}/password`, { password });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
+        throw error;
     }
 };

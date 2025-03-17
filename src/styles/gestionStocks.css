@@ -1,101 +1,73 @@
+/* ====== Styles Généraux ====== */
 html, body {
     height: 100vh; /* Force la hauteur à 100% de l'écran */
-    overflow: hidden; /* Empêche le scroll vertical */
-    margin: 0; /* Évite tout espace supplémentaire */
+    overflow: hidden; /* Empêche le scroll global */
+    margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
 }
+
+/* ====== Conteneur Principal ====== */
 .gestion-stock-container {
     margin: 20px;
     display: flex;
     justify-content: flex-start;  /* Aligne les éléments au début du conteneur */
     gap: 20px;  /* Espace entre le tableau et le formulaire */
     width: 100%;
-    box-sizing: border-box; /* Assure que le padding ne fait pas déborder l'élément */
+    box-sizing: border-box;
     flex-direction: row;
-    height: calc(100vh - 80px); /* Ajuste selon la hauteur de ta navbar */
-    min-height: 0; /* Évite l'agrandissement excessif */
+    height: calc(100vh - 80px); /* Ajuste selon la hauteur de la navbar */
+    min-height: 0;
     overflow: hidden; /* Empêche le débordement */
 }
 
-/* Conteneur pour les produits et le formulaire */
-.content {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    height: 100%; /* Permet au contenu d'occuper toute la hauteur disponible */
-}
-
-/* Tableau de produits - occupe 2/3 de la largeur */
+/* ====== Tableau des produits (avec scroll) ====== */
 .table-container {
     width: 75%;
-
-    overflow-x: auto; /* Permet le défilement horizontal */
-    overflow-y: auto;
-    max-height: 100%;
-}
-
-/* Formulaire d'ajout */
-.form-container {
-    width: 25%;  /* Prend 1/3 de la largeur */
-    top: 80px;
-    padding: 20px;
-    box-sizing: border-box; /* Ne laisse pas le padding affecter la taille */
-    overflow-y: auto; /* Permet au formulaire de défiler si son contenu dépasse la hauteur de l'écran */
-    position: sticky;
-    display: flex;
-    flex-direction: column; /* Disposition en colonne pour les éléments du formulaire */
-    justify-content: space-evenly; /* Espacement uniforme entre les éléments du formulaire */
-    align-items: center; /* Centre les éléments horizontalement */
-}
-
-
-/* Titre du formulaire */
-.form-container h2 {
-    background-color: #007bff;  /* Fond bleu pour le titre */
-    color: white;  /* Couleur du texte en blanc pour contraster avec le bleu */
-    padding: 10px;  /* Espacement autour du texte */
-    border-radius: 5px;  /* Bord arrondi si tu le souhaites */
-    width: 93%;  /* S'assurer que le titre occupe toute la largeur disponible */
-    text-align: center;  /* Centrer le texte horizontalement */
-}
-
-/* Formulaire d'ajout de produit - espacement des champs */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly; /* Espacement uniforme entre les éléments */
-    gap: 20px; /* Espacement plus large entre les éléments */
-    width: 100%; /* Laissez-le occuper toute la largeur disponible */
-    max-width: 500px; /* Limite la largeur des champs */
-    align-items: center; /* Centrer les champs horizontalement */
-    height: auto; /* Assure que l'espace est réparti correctement */
-}
-
-/* Champ de formulaire */
-.form-group input, .form-group select {
+    max-height: 80vh; /* Ajuste selon la hauteur de l'écran */
+    overflow-y: auto; /* Active le scroll vertical uniquement si nécessaire */
+    overflow-x: auto; /* Active le scroll horizontal uniquement si nécessaire */
+    border: 1px solid #ddd; /* Bordure pour bien délimiter */
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%; /* Remplie la largeur disponible dans le formulaire */
-    max-width: 400px; /* Limite la largeur des champs à 400px */
-    box-sizing: border-box; /* Assure que padding n'ajoute pas à la largeur totale */
 }
 
-/* Bouton d'ajout - placé en bas du formulaire */
-.add-btn {
+/* Style du scrollbar pour une meilleure visibilité */
+.table-container::-webkit-scrollbar {
+    width: 8px; /* Largeur du scrollbar */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ====== Tableau ====== */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 100%;
+}
+
+.product-table th, .product-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Garde l'en-tête du tableau fixe */
+.product-table th {
     background-color: #007bff;
     color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    max-width: 400px; /* Limite la largeur du bouton */
-    width: 100%;
-    margin-top: 20px; /* Ajoute un espace entre le dernier champ et le bouton */
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-/* Styles pour la recherche */
+/* ====== Barre de Recherche ====== */
 .search-bar {
     display: flex;
     gap: 10px;
@@ -103,7 +75,7 @@ html, body {
 }
 
 .search-bar input {
-    padding: 3px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
@@ -117,50 +89,63 @@ html, body {
     border-radius: 8px;
 }
 
-/* Tableau des produits */
-.product-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 100%; /* Évite que le tableau ne soit compressé */
+/* ====== Formulaire d'Ajout de Produit ====== */
+.form-container {
+    width: 25%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Permet de scroller dans le formulaire si trop long */
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
-.product-table th, .product-table td {
-    border: 1px solid #ddd;
+.form-container h2 {
+    background-color: #007bff;
+    color: white;
     padding: 10px;
+    border-radius: 5px;
+    width: 93%;
     text-align: center;
 }
 
-.product-table th {
+/* Champs du formulaire */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 500px;
+    align-items: center;
+}
+
+.form-group input, .form-group select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+/* Bouton d'ajout */
+.add-btn {
     background-color: #007bff;
     color: white;
-}
-
-/* Actions des produits */
-.actions {
-    display: flex;
-    justify-content: space-between;  /* Espace entre les deux boutons */
-    gap: 10px; /* Espacement entre les boutons, ajustable */
-    align-items: center; /* Centrer verticalement les boutons */
-}
-
-.edit-btn, .delete-btn {
+    padding: 10px;
     border: none;
-    padding: 5px;
     cursor: pointer;
+    font-size: 16px;
+    max-width: 400px;
+    width: 100%;
+    margin-top: 20px;
 }
 
-.delete-btn {
-    background-color: red;
-    color: white;
-}
-
-/* Formulaire d'ajout de produit */
-.add-product-container {
-    padding: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
+/* ====== Messages de Notification ====== */
 .message {
     position: fixed;
     top: 120px;
@@ -177,14 +162,14 @@ html, body {
     animation: fadeOut 4s ease-in-out forwards;
 }
 
-/* Ajuste la durée de visibilité avant de disparaître */
+/* Animation pour faire disparaître les messages */
 @keyframes fadeOut {
     0% { opacity: 1; transform: translateY(0); }
-    90% { opacity: 1; transform: translateY(0); } /* Visible plus longtemps */
+    90% { opacity: 1; transform: translateY(0); }
     100% { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Styles de la notification */
+/* Styles spécifiques pour succès et erreur */
 .message.success {
     background-color: #d4edda;
     color: #155724;
@@ -195,4 +180,31 @@ html, body {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+
+/* ====== Actions des Produits ====== */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+}
+
+/* ====== Conteneur d'Ajout de Produit ====== */
+.add-product-container {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
