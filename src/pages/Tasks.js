@@ -1,9 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Alert from "../pages/Alert";
+import { fetchAlerts } from "../services/alertService";
 import "../styles/Tasks.css";
 
+function TaskItem({ alert, onValidateClick }) {
+  return (
+    <div
+      key={alert.uuid}
+      className={`task-panel ${alert.statut.slug === 'urgent' ? "urgent" : "attente"}`}
+    >
+      <div className="status-indicator"></div>
+      <div className="task-cell">{alert.rayon}</div>
+      <div className="task-cell">{alert.secteur}</div>
+      <div className="task-cell">{alert.reference}</div>
+      <div className="task-cell">{alert.produit}</div>
+      <div className="task-cell">{alert.stock}</div>
+      <div className="task-cell">{alert.quantite}</div>
+      <div className={`task-status ${alert.statut.slug}`}>{alert.statut.libelle}</div>
+      <button className="action-button" onClick={onValidateClick}>
+        Valider
+      </button>
+    </div>
+  );
+}
+
 function Tasks() {
+  const [alerts, setAlerts] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const getAlerts = async () => {
+      try {
+        const data = await fetchAlerts();
+        console.log("Fetched alerts:", data);
+
+        if (Array.isArray(data) && data.every(item => typeof item === 'object' && item !== null)) {
+          setAlerts(data);
+        } else {
+          console.error("Fetched data is not a valid array of objects:", data);
+          setError("Erreur lors du chargement des alertes. Veuillez réessayer plus tard.");
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des alertes :", error);
+        setError("Erreur lors du chargement des alertes. Veuillez réessayer plus tard.");
+      }
+    };
+
+    getAlerts();
+  }, []);
 
   const handleConfirm = () => {
     console.log("Confirmed");
@@ -18,6 +63,10 @@ function Tasks() {
   const handleValidateClick = () => {
     setShowAlert(true);
   };
+
+  if (error) {
+    return <div>Erreur : {error}</div>;
+  }
 
   return (
     <div className="Tasks">
@@ -37,7 +86,7 @@ function Tasks() {
       </div>
 
       <div className="task-list">
-      <div className="task-header">
+        <div className="task-header">
           <div className="task-cell">Rayon</div>
           <div className="task-cell">Secteur</div>
           <div className="task-cell">Référence</div>
@@ -48,66 +97,17 @@ function Tasks() {
           <div className="task-cell">Action</div>
         </div>
 
-        <div className="task-panel urgent">
-          <div className="status-indicator"></div>
-          <div className="task-cell">7</div>
-          <div className="task-cell">Fromage</div>
-          <div className="task-cell">1165498436496</div>
-          <div className="task-cell">Conté</div>
-          <div className="task-cell">A7</div>
-          <div className="task-cell">76</div>
-          <div className="task-status in-progress">En cours</div>
-          <button className="action-button" onClick={handleValidateClick}>Valider</button>
-        </div>
-
-        <div className="task-panel attente">
-          <div className="status-indicator"></div>
-          <div className="task-cell">14</div>
-          <div className="task-cell">Légumes frais</div>
-          <div className="task-cell">2544960612492</div>
-          <div className="task-cell">poivrons rouges</div>
-          <div className="task-cell">B4</div>
-          <div className="task-cell">29</div>
-          <div className="task-status attente">En attente</div>
-          <button className="action-button" onClick={handleValidateClick}>Valider</button>
-        </div>
-
-        <div className="task-panel urgent">
-          <div className="status-indicator"></div>
-          <div className="task-cell">22</div>
-          <div className="task-cell">Accueil et livres</div>
-          <div className="task-cell">1165498436496</div>
-          <div className="task-cell">dictionnaire</div>
-          <div className="task-cell">A2</div>
-          <div className="task-cell">31</div>
-          <div className="task-status in-progress">En Cours</div>
-          <button className="action-button" onClick={handleValidateClick}>Valider</button>
-        </div>
-
-        <div className="task-panel attente">
-          <div className="status-indicator"></div>
-          <div className="task-cell">22</div>
-          <div className="task-cell">Accueil et livres</div>
-          <div className="task-cell">1165498436496</div>
-          <div className="task-cell">dictionnaire</div>
-          <div className="task-cell">A7</div>
-          <div className="task-cell">31</div>
-          <div className="task-status attente">En attente</div>
-          <button className="action-button" onClick={handleValidateClick}>Valider</button>
-        </div>
-
-        <div className="task-panel urgent">
-          <div className="status-indicator"></div>
-          <div className="task-cell">22</div>
-          <div className="task-cell">Accueil et livres</div>
-          <div className="task-cell">1165498436496</div>
-          <div className="task-cell">dictionnaire</div>
-          <div className="task-cell">A7</div>
-          <div className="task-cell">31</div>
-          <div className="task-status attente">En attente</div>
-          <button className="action-button" onClick={handleValidateClick}>Valider</button>
-        </div>
-
+        {Array.isArray(alerts) && alerts.length > 0 ? (
+          alerts.map((alert) => (
+            <TaskItem
+              key={alert.uuid}
+              alert={alert}
+              onValidateClick={handleValidateClick}
+            />
+          ))
+        ) : (
+          <div>No alerts available.</div>
+        )}
       </div>
 
       {showAlert && (

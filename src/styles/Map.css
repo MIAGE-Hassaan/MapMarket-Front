@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../styles/Roboto-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
+.fenetre-alerte {
+  position: absolute;
+  top: 35%;
+  left: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 30%;
+  height: auto;
+  background-color: white;
+  padding: 2%;
+  box-shadow: 0vw 0.5vw 0.5vw 0vw rgba(0, 0, 0, 0.1);
+  border-radius: 0.2vw;
+}
+
+.produit-alerte {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.produit {
+  width: 100%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fenetre-alerte a {
+  text-decoration: none;
+  background-color: #4879F6;
+  color: white;
+  border-radius: 0.2vw;
+  padding: 2% 4%;
+  margin-top: 2%; 
+  width: fit-content; 
+  text-align: center;
+}
+.fenetre-alerte a:hover{
+  opacity: 80%;
+  cursor: pointer;
+}
+
+.bouton-fermeture {
+  cursor: pointer;
+  color: red;
+  font-size: 2vw;
+  position: absolute;
+  top: 2%;
+  right: 2%;
+}
+
+.map-rectangle {
+  fill-opacity: 0.8;
+}
+
+.map-rectangle:hover {
+  fill-opacity: 1;
+}
+
+.shadowed-rect {
+  filter: drop-shadow(1vw 0vw 1vw rgba(0, 0, 0, 0.1));
+}

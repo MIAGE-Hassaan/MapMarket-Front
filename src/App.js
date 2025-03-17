@@ -10,6 +10,9 @@ import Map from "./pages/Map";
 import CreateAccount from "./pages/CreateAccount";
 import GestionStock from "./pages/GestionStocks";
 
+import CreateAccount from "./pages/CreateAccount";
+import EmployeeManagement from "./pages/EmployeeManagement";
+import InformationEmployee from "./pages/InformationEmployee";
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
           <Route path="map" element={<Map/>}/>
           <Route path="createAccount" element={<CreateAccount />}/>
           <Route path="gestionStocks" element={<GestionStock />}/>
+          <Route path="createAccount" element={<CreateAccount/>}/>
+          <Route path="employeeManagement" element={<EmployeeManagement/>}/>
+          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee/>}/>
         </Route>
       </Routes>
     </Router>
