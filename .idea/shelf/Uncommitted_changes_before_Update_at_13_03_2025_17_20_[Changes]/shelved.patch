@@ -1,0 +1,237 @@
+Index: src/pages/EmployeeManagement.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useEffect, useState } from \"react\";\r\nimport \"../styles/EmployeeManagement.css\";\r\nimport {useNavigate} from \"react-router-dom\";\r\n\r\nfunction EmployeeManagement() {\r\n    const [employees, setEmployees] = useState([]);\r\n    const [newEmployee, setNewEmployee] = useState({ nom: \"\", prenom: \"\" });\r\n    const [employeeToDelete, setEmployeeToDelete] = useState(null);\r\n    const navigate = useNavigate();\r\n    const userService = require('../services/userService');\r\n\r\n\r\n    async function fetchEmployees() {\r\n        try {\r\n            const users = await userService.getAllUsers()\r\n            const data = await users.json();\r\n            setEmployees(data);\r\n        } catch (error) {\r\n            console.error(\"Erreur lors du chargement des données :\", error);\r\n        }\r\n    }\r\n\r\n    async function deleteEmployee(id, nom, prenom) {\r\n        const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);\r\n        if (confirmation) {\r\n            try{\r\n                await userService.deleteUser(id, nom, prenom);\r\n            }catch (error){\r\n                console.error(\"Erreur lors de la suppression de l'employé :\", error);\r\n            }\r\n            console.log(`Employé avec l'ID ${id} supprimé.`);\r\n\r\n        }\r\n        await fetchEmployees();\r\n    }\r\n\r\n    function addEmployee() {\r\n        const newId = employees.length > 0 ? employees[employees.length - 1].id + 1 : 1;\r\n\r\n        const employeeToAdd = {\r\n            id: newId,\r\n            nom: \"Test\",      //newEmployee.nom\r\n            prenom: \"nom\",        //newEmployee.prenom\r\n        };\r\n\r\n        setEmployees([...employees, employeeToAdd]);\r\n\r\n        console.log(\"Nouvel employé ajouté :\", employeeToAdd);\r\n\r\n        // Réinitialiser le formulaire\r\n        setNewEmployee({ nom: \"test\", prenom: \"nom\" });\r\n    }\r\n\r\n    useEffect(() => {\r\n        fetchEmployees();\r\n    }, []);\r\n\r\n    return (\r\n        <div className=\"tab\">\r\n            <div className=\"hautListEmployees\">\r\n                <p className={\"titre2\"} >Liste des employés</p>\r\n                <button className=\"add-employee-button\" onClick={addEmployee}>+ Ajouter un employé</button>\r\n            </div>\r\n            <table>\r\n                <thead>\r\n                <tr>\r\n                    <th>Nom</th>\r\n                    <th>Prénom</th>\r\n                    <th>ID Employé</th>\r\n                    <th>Information</th>\r\n                    <th>Supprimer</th>\r\n                </tr>\r\n                </thead>\r\n                <tbody>\r\n                {employees.map(employee => (\r\n                    <tr key={employee.id}>\r\n                        <td>{employee.nom}</td>\r\n                        <td>{employee.prenom}</td>\r\n                        <td>{employee.id}</td>\r\n                        <td>\r\n                            <img className=\"icone\"\r\n                                 src=\"/assets/oeil.png\"\r\n                                 width=\"30\"\r\n                                 alt=\"Voir plus\"\r\n                                 onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}/>\r\n                        </td>\r\n                        <td>\r\n                            <img\r\n                                className=\"icone\"\r\n                                src=\"/assets/filled-trash.png\"\r\n                                width=\"30\"\r\n                                alt=\"Supprimer\"\r\n                                onClick={() => deleteEmployee(employee.id, employee.nom, employee.prenom)}\r\n                                style={{cursor: \"pointer\"}}\r\n                            />\r\n                        </td>\r\n                    </tr>\r\n                ))}\r\n                <tr key={99}>\r\n                    <td>eluecque</td>\r\n                    <td>kelian</td>\r\n                    <td>99</td>\r\n                    <td>\r\n                        <img className=\"icone\"\r\n                             src=\"/assets/oeil.png\"\r\n                             width=\"30\"\r\n                             alt=\"Voir plus\"\r\n                             onClick={() => navigate(`/InformationEmployee/eluecque/kelian`)}/>\r\n                    </td>\r\n                    <td>\r\n                        <img\r\n                            className=\"icone\"\r\n                            src=\"/assets/filled-trash.png\"\r\n                            width=\"30\"\r\n                            alt=\"Supprimer\"\r\n                            onClick={() => deleteEmployee(\"99\", \"eluecque\", \"kelian\")}\r\n                            style={{cursor: \"pointer\"}}\r\n                        />\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    );\r\n}\r\n\r\nexport default EmployeeManagement;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/pages/EmployeeManagement.js b/src/pages/EmployeeManagement.js
+--- a/src/pages/EmployeeManagement.js	(revision a91fb93400549a3e608b51a85011a63275a66603)
++++ b/src/pages/EmployeeManagement.js	(date 1741882798956)
+@@ -12,44 +12,64 @@
+ 
+     async function fetchEmployees() {
+         try {
+-            const users = await userService.getAllUsers()
+-            const data = await users.json();
+-            setEmployees(data);
++            const users = await userService.getAllUsers; // users est déjà un tableau d'objets JSON
++            if (!users) {
++                throw new Error("Aucune donnée reçue");
++            }
++
++            setEmployees(users); // Pas besoin de `json()`
+         } catch (error) {
+-            console.error("Erreur lors du chargement des données :", error);
++            console.error("Erreur lors du chargement des données :", error.message);
+         }
+     }
+ 
+     async function deleteEmployee(id, nom, prenom) {
+         const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);
+-        if (confirmation) {
+-            try{
+-                await userService.deleteUser(id, nom, prenom);
+-            }catch (error){
+-                console.error("Erreur lors de la suppression de l'employé :", error);
+-            }
+-            console.log(`Employé avec l'ID ${id} supprimé.`);
+-
++
++        if (!confirmation) return; // Si l'utilisateur annule, on arrête la fonction.
++
++        try {
++            await userService.deleteUser(id); // On ne passe que l'ID
++            console.log(`Employé avec l'ID ${id} supprimé.`);
++            await fetchEmployees(); // Rafraîchir la liste des employés seulement après une suppression réussie
++        } catch (error) {
++            console.error("Erreur lors de la suppression de l'employé :", error);
+         }
+-        await fetchEmployees();
+     }
+ 
+-    function addEmployee() {
+-        const newId = employees.length > 0 ? employees[employees.length - 1].id + 1 : 1;
+ 
+-        const employeeToAdd = {
+-            id: newId,
+-            nom: "Test",      //newEmployee.nom
+-            prenom: "nom",        //newEmployee.prenom
+-        };
++    async function addEmployee() {
++        const token = localStorage.getItem("token");
+ 
+-        setEmployees([...employees, employeeToAdd]);
++        if (!token) {
++            console.error("⚠ Aucun token trouvé !");
++            return;
++        }
+ 
+-        console.log("Nouvel employé ajouté :", employeeToAdd);
++        const newEmployeeData = {
++            nom: newEmployee.nom,
++            prenom: newEmployee.prenom,
++        };
+ 
+-        // Réinitialiser le formulaire
+-        setNewEmployee({ nom: "test", prenom: "nom" });
++        try {
++            const response = await fetch("http://mapmarketapi.test/api/employees", {
++                method: "POST",
++                headers: {
++                    "Content-Type": "application/json",
++                    Authorization: `Bearer ${token}`,
++                },
++                body: JSON.stringify(newEmployeeData),
++            });
++            if (!response.ok) {
++                throw new Error("Erreur lors de l'ajout de l'employé");
++            }
++            console.log("✅ Employé ajouté avec succès !");
++            await fetchEmployees(); // Rafraîchir la liste
++        } catch (error) {
++            console.error("❌ Erreur lors de l'ajout de l'employé :", error.message);
++        }
+     }
++
+ 
+     useEffect(() => {
+         fetchEmployees();
+Index: src/services/userService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import axios from 'axios';\r\n\r\n\r\nasync function loginUser (email, password){\r\n    const reponse = await axios.post(\"http://mapmarketapi.test/api/login\",{ email, password,});\r\n    const token = reponse.data.token;\r\n    localStorage.setItem(\"token\", token);\r\n    console.log(\"token recu :\", token);\r\n    return reponse.data;\r\n}\r\n\r\n\r\nasync function getAllUsers(){\r\n    const token = localStorage.getItem(\"token\");\r\n    console.log(\"token récupéré: \", token);\r\n    try{\r\n        const rep = axios.get('http://mapmarketapi.test/api/users_basics');\r\n        const users = rep.data;\r\n        const usersArray = users.map(user => ({\r\n            id: user.id,\r\n            nom: user.nom,\r\n            prenom: user.prenom\r\n        }));\r\n\r\n        console.log(usersArray);\r\n        return usersArray;\r\n    }catch (e){\r\n        console.log(e)\r\n    }\r\n}\r\n\r\nloginUser();\r\ngetAllUsers();\r\n\r\n// Fonction pour supprimer un utilisateur\r\nasync function deleteUser(nom, prenom, id){\r\n    try{\r\n        const rep = await axios.delete(`http://mapmarketapi.test/api/users_basics/${id}`);\r\n        const users = rep.data;\r\n        const usersArray = users.map(user => ({\r\n            id: user.id,\r\n            nom: user.nom,\r\n            prenom: user.prenom\r\n        }));\r\n\r\n        console.log(usersArray);\r\n        return usersArray;\r\n    }catch (e){\r\n        console.log(e)\r\n    }\r\n}\r\n\r\nexport default { getAllUsers, deleteUser};
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/services/userService.js b/src/services/userService.js
+--- a/src/services/userService.js	(revision a91fb93400549a3e608b51a85011a63275a66603)
++++ b/src/services/userService.js	(date 1741882798969)
+@@ -1,53 +1,72 @@
+ import axios from 'axios';
+ 
++const API_URL = "http://mapmarketapi.test/api";
+ 
+-async function loginUser (email, password){
+-    const reponse = await axios.post("http://mapmarketapi.test/api/login",{ email, password,});
+-    const token = reponse.data.token;
+-    localStorage.setItem("token", token);
+-    console.log("token recu :", token);
+-    return reponse.data;
++// 🔐 Fonction de connexion
++async function loginUser(email, password) {
++    try {
++        const response = await axios.post(`${API_URL}/login`, { email, password });
++        const token = response.data.token;
++
++        if (!token) {
++            throw new Error("Aucun token reçu");
++        }
++
++        localStorage.setItem("token", token);
++        console.log("✅ Token reçu :", token);
++        return response.data;
++    } catch (error) {
++        console.error("❌ Erreur de connexion :", error.response ? error.response.data : error.message);
++    }
+ }
+-
+ 
+-async function getAllUsers(){
++// 👥 Récupérer tous les utilisateurs
++async function getAllUsers() {
+     const token = localStorage.getItem("token");
+-    console.log("token récupéré: ", token);
+-    try{
+-        const rep = axios.get('http://mapmarketapi.test/api/users_basics');
+-        const users = rep.data;
+-        const usersArray = users.map(user => ({
++
++    if (!token) {
++        console.error("⚠ Aucun token trouvé !");
++        return [];
++    }
++
++    console.log("🔑 Token récupéré :", token);
++
++    try {
++        const response = await axios.get(`${API_URL}/users_basics`, {
++            headers: { Authorization: `Bearer ${token}` }
++        });
++
++        console.log("✅ Utilisateurs récupérés :", response.data);
++
++        return response.data.map(user => ({
+             id: user.id,
+             nom: user.nom,
+             prenom: user.prenom
+         }));
+-
+-        console.log(usersArray);
+-        return usersArray;
+-    }catch (e){
+-        console.log(e)
++    } catch (error) {
++        console.error("❌ Erreur lors de la récupération des utilisateurs :", error.response ? error.response.data : error.message);
++        return [];
+     }
+ }
+ 
+-loginUser();
+-getAllUsers();
++// 🗑️ Supprimer un utilisateur
++async function deleteUser(id) {
++    const token = localStorage.getItem("token");
+ 
+-// Fonction pour supprimer un utilisateur
+-async function deleteUser(nom, prenom, id){
+-    try{
+-        const rep = await axios.delete(`http://mapmarketapi.test/api/users_basics/${id}`);
+-        const users = rep.data;
+-        const usersArray = users.map(user => ({
+-            id: user.id,
+-            nom: user.nom,
+-            prenom: user.prenom
+-        }));
++    if (!token) {
++        console.error("⚠ Aucun token trouvé !");
++        return;
++    }
++
++    try {
++        await axios.delete(`${API_URL}/users_basics/${id}`, {
++            headers: { Authorization: `Bearer ${token}` }
++        });
+ 
+-        console.log(usersArray);
+-        return usersArray;
+-    }catch (e){
+-        console.log(e)
++        console.log(`✅ Utilisateur avec ID ${id} supprimé.`);
++    } catch (error) {
++        console.error("❌ Erreur lors de la suppression :", error.response ? error.response.data : error.message);
+     }
+ }
+ 
+-export default { getAllUsers, deleteUser};
+\ No newline at end of file
++export default { loginUser, getAllUsers, deleteUser };
+Index: src/App.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React from \"react\";\r\nimport { BrowserRouter as Router, Routes, Route } from \"react-router-dom\";\r\nimport Layout from \"./components/Layout\"; \r\nimport Home from \"./pages/Home\"; \r\nimport Login from \"./pages/Login\";\r\nimport ForgotPassword from \"./pages/ForgotPassword\";\r\nimport ResetPassword from \"./pages/ResetPassword\";\r\nimport Tasks from \"./pages/Tasks\";\r\nimport Map from \"./pages/Map\";\r\nimport CreateAccount from \"./pages/CreateAccount\";\r\nimport EmployeeManagement from \"./pages/EmployeeManagement\";\r\nimport InformationEmployee from \"./pages/InformationEmployee\";\r\n\r\nfunction App() {\r\n  return (\r\n    <Router>\r\n      <Routes>\r\n        {/* Layout contient la Sidebar */}\r\n        <Route path=\"/\" element={<Layout />}>\r\n          <Route index element={<Home />} />\r\n          <Route path=\"login\" element={<Login />} />\r\n          <Route path=\"forgotPassword\" element={<ForgotPassword />} />\r\n          <Route path=\"resetPassword\" element={<ResetPassword />} />\r\n          <Route path=\"tasks\" element={<Tasks/>}/>\r\n          <Route path=\"map\" element={<Map/>}/>\r\n          <Route path=\"createAccount\" element={<CreateAccount/>}/>\r\n          <Route path=\"employeeManagement\" element={<EmployeeManagement/>}/>\r\n          <Route path=\"informationEmployee\" element={<InformationEmployee/>}/>\r\n        </Route>\r\n      </Routes>\r\n    </Router>\r\n  );\r\n}\r\n\r\nexport default App;\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/App.js b/src/App.js
+--- a/src/App.js	(revision a91fb93400549a3e608b51a85011a63275a66603)
++++ b/src/App.js	(date 1741882798983)
+@@ -25,7 +25,7 @@
+           <Route path="map" element={<Map/>}/>
+           <Route path="createAccount" element={<CreateAccount/>}/>
+           <Route path="employeeManagement" element={<EmployeeManagement/>}/>
+-          <Route path="informationEmployee" element={<InformationEmployee/>}/>
++          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee/>}/>
+         </Route>
+       </Routes>
+     </Router>
