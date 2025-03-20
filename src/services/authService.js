@@ -55,19 +55,9 @@ export const registerUser = async (userData) => {
     }
 };
 
-export const getUserInfo = () => {
-  const token = localStorage.getItem("token");
-  console.log("Token récupéré pour décodage :", token); // Log du token récupéré
-  if (token) {
 // ✅ Étape 2 : Récupérer l'UUID de l'utilisateur en recherchant par email
 export const getUserUuidByEmail = async (email) => {
     try {
-      const decodedToken = jwtDecode(token);
-      console.log("Token décodé :", decodedToken); // Log du token décodé
-      return {
-        nom: decodedToken.nom,
-        prenom: decodedToken.prenom,
-      };
         const response = await axios.get(API_URL);
         const users = response.data; // Liste des utilisateurs
         const user = users.find((u) => u.email === email);
@@ -76,13 +66,9 @@ export const getUserUuidByEmail = async (email) => {
 
         return user.uuid; // Retourne l'UUID
     } catch (error) {
-      console.error("Erreur lors du décodage du token :", error);
-      return null;
         console.error("❌ Erreur lors de la récupération de l'UUID :", error.response?.data || error.message);
         throw error;
     }
-  }
-  return null;
 };
 
 // ✅ Étape 3 : Envoyer le mot de passe une fois l'UUID récupéré

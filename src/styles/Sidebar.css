@@ -72,6 +72,5 @@
 .sidebar-main-link:hover,
 .sidebar-option-link:hover {
   opacity: 80%;
-  background-color: #4879F6;
   cursor: pointer;
 }
