@@ -26,8 +26,11 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Mot de passe oublié";
       case "/resetPassword":
         return "Réinitialisation du mot de passe";
+      case "/EmployeeManagement":
+        return "Liste des employés";
       default:
         return ".";
+        
     }
   };
 
@@ -42,7 +45,7 @@ function Navbar({ collapsed, toggleSidebar }) {
           {hasAlerts && !loading && !error && <span className="alert-dot"></span>}
         </a>
         <div className="user-name-navbar">
-          <img src="../assets/user.jpg" alt="User" />
+          <img src="../assets/user.png" alt="User" />
           <h3>{users_basics ? `${users_basics.nom} ${users_basics.prenom}` : "Session invité"}</h3>
         </div>
       </div>

@@ -14,7 +14,6 @@ export default function GestionStock() {
         console.log("Chargement des produits...");
         const loadProducts = async () => {
             try {
-                console.log("🔄 fetchProducts() va être appelé !");
                 const response = await fetchProducts();
                 const productsData = response.data;
 

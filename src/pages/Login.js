@@ -61,47 +61,14 @@ function Login() {
           />
           {error && <p className="error">{error}</p>}
           {responseData && (
-            <>
             <div className="response-data">
               <h3>Réponse de la requête de connexion :</h3>
               <pre>{JSON.stringify(responseData, null, 2)}</pre>
             </div>
-            <label htmlFor="password">Mot de passe</label>
-            <div className="input-display">
-              <FontAwesomeIcon icon={faRegularBell} className="input-icon" />
-              <input
-                  type="password"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-              />
-            </div>
-            <a href="forgotPassword">Mot de passe oublié ?</a>
-            <div className="remember-display">
-              <input type="checkbox" name="remember" />
-              <p>Se souvenir de moi</p>
-            </div>
-            <input
-                type="submit"
-                name="submitLogin"
-                value="Se connecter"
-                className="submitLogin"
-                disabled={isLoading}
-                required
-            />
-            </>
-            )}
-            {error && <p className="error">{error}</p>}
-            {responseData && (
-                <div className="response-data">
-                  <h3>Réponse de la requête de connexion :</h3>
-                  <pre>{JSON.stringify(responseData, null, 2)}</pre>
-                </div>
-            )}
-          </form>
-        </div>
+          )}
+        </form>
       </div>
+    </div>
   );
 }
 

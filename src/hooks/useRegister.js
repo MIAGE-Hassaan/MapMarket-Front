@@ -14,29 +14,29 @@ const useRegister = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    // ✅ Gestion du changement des inputs
+    // Gestion du changement des inputs
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // ✅ Gestion de la soumission du formulaire
+    // Gestion de la soumission du formulaire
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError("");
         setIsLoading(true);
 
         try {
-            // ➤ Étape 1 : Création de l'utilisateur
+            // Étape 1 : Création de l'utilisateur
             await registerUser({
                 nom: formData.nom,
                 prenom: formData.prenom,
                 email: formData.email,
             });
 
-            // ➤ Étape 2 : Récupérer l'UUID de l'utilisateur
+            // Étape 2 : Récupérer l'UUID de l'utilisateur
             const uuid = await getUserUuidByEmail(formData.email);
 
-            // ➤ Étape 3 : Définir le mot de passe
+            // Étape 3 : Définir le mot de passe
             await setUserPassword(uuid, formData.password);
 
             navigate("/login"); // Redirection vers la connexion

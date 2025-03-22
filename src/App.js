@@ -7,9 +7,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Tasks from "./pages/Tasks";
 import Map from "./pages/Map";
-import CreateAccount from "./pages/CreateAccount";
 import GestionStock from "./pages/GestionStocks";
-
 import CreateAccount from "./pages/CreateAccount";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import InformationEmployee from "./pages/InformationEmployee";

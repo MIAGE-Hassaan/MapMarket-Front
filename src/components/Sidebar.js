@@ -23,9 +23,9 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
             <img src="../assets/home-9-line.png" alt="logo" />
             {!collapsed && <p>Dashboard</p>}
           </a>
-          <a href="données" className="sidebar-main-link">
+          <a href="gestionStocks" className="sidebar-main-link">
             <img src="../assets/bar-chart-2-line.png" alt="logo" />
-            {!collapsed && <p>Données</p>}
+            {!collapsed && <p>Stocks</p>}
           </a>
           <a href="map" className="sidebar-main-link">
             <img src="../assets/map-pin-line.png" alt="logo" />
