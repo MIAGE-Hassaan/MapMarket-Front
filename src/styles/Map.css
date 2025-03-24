@@ -73,3 +73,6 @@
 .shadowed-rect {
   filter: drop-shadow(1vw 0vw 1vw rgba(0, 0, 0, 0.1));
 }
+#map #map-u-rack-25{
+  border: 2vw solid red;
+}

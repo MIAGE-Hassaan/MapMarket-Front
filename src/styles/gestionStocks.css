@@ -1,5 +1,5 @@
 /* ====== Styles Généraux ====== */
-html, body {
+.gestion-stock-container {
     height: 100vh; /* Force la hauteur à 100% de l'écran */
     overflow: hidden; /* Empêche le scroll global */
     margin: 0;

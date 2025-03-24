@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getUserInfo } from "../services/authService";
+import { getUserInfo, verifyTokenValidity } from "../services/authService"; // Importer la nouvelle fonction
 import { useAlerts } from "../hooks/useAlerts";
 import "../styles/Navbar.css";
 
 function Navbar({ collapsed, toggleSidebar }) {
   const location = useLocation();
-  const users_basics = getUserInfo();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
   const { hasAlerts, loading, error } = useAlerts();
+
+  // Vérifier la validité du token et récupérer les informations de l'utilisateur
+  useEffect(() => {
+    const tokenValid = verifyTokenValidity();
+    setIsLoggedIn(tokenValid);
+
+    if (tokenValid) {
+      const info = getUserInfo();
+      setUserInfo(info); // Si le token est valide, récupérer les informations de l'utilisateur
+    } else {
+      setUserInfo(null); // Si le token est invalide, on efface les informations utilisateur
+    }
+  }, []);
 
   // Fonction pour déterminer le titre en fonction de l'URL
   const getTitle = (pathname) => {
@@ -28,9 +42,12 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Réinitialisation du mot de passe";
       case "/EmployeeManagement":
         return "Liste des employés";
+      case "/gestionStocks":
+        return "Gestion des produits";
+      case "/InformationEmployee":
+        return "Informations employée";
       default:
         return ".";
-        
     }
   };
 
@@ -46,7 +63,7 @@ function Navbar({ collapsed, toggleSidebar }) {
         </a>
         <div className="user-name-navbar">
           <img src="../assets/user.png" alt="User" />
-          <h3>{users_basics ? `${users_basics.nom} ${users_basics.prenom}` : "Session invité"}</h3>
+          <h3>{isLoggedIn && userInfo ? `${userInfo.nom} ${userInfo.prenom}` : "Session invité"}</h3>
         </div>
       </div>
     </div>

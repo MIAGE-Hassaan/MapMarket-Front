@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../services/authService";
+import { logoutUser, verifyTokenValidity, getUserInfo } from "../services/authService"; // Import de la nouvelle fonction
 import "../styles/Sidebar.css";
 
 const Sidebar = ({ collapsed, toggleSidebar }) => {
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Vérification du token à chaque re-rendu ou au montage du composant
+  useEffect(() => {
+    const tokenValid = verifyTokenValidity();
+    setIsLoggedIn(tokenValid); // Mettre à jour l'état en fonction de la validité du token
+
+    // Si le token est invalide, redirige vers la page de connexion
+    if (!tokenValid) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // Fonction de gestion de la déconnexion
   const handleLogout = async () => {
-    await logoutUser(navigate);
+    await logoutUser(navigate); // Déconnecter l'utilisateur
+    setIsLoggedIn(false); // Réinitialiser l'état de connexion
+    navigate("/login"); // Rediriger vers la page de connexion immédiatement après la déconnexion
   };
+
+  const userInfo = getUserInfo();
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -32,14 +48,16 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
             {!collapsed && <p>Cartographie</p>}
           </a>
           {isLoggedIn ? (
-            <a href="EmployeeManagement" className="sidebar-main-link">
-              <img src="../assets/group-line.png" alt="logo" />
-              {!collapsed && <p>Compte</p>}
-            </a>
+            <>
+              <a href="EmployeeManagement" className="sidebar-main-link">
+                <img src="../assets/group-line.png" alt="logo" />
+                {!collapsed && <p>Employés</p>}
+              </a>
+            </>
           ) : (
             <a href="login" className="sidebar-main-link">
-              <img src="../assets/group-line.png" alt="logo" />
-              {!collapsed && <p>Employés</p>}
+              <img src="../assets/account-box-line.png" alt="logo" />
+              {!collapsed && <p>Compte</p>}
             </a>
           )}
         </div>

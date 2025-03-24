@@ -71,7 +71,7 @@ const SvgMap = () => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="svg_map" style={{ position: 'relative' }}>
      <svg id="map" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"  ref={svgRef} viewBox="0 0 1920 1080" shapeRendering="geometricPrecision" textRendering="geometricPrecision" project_id="c6c38a66b99748c8bd9a2366b2ebeffa" export_id="ac1627c9b4d444ac83e1de455905bd54" cached="true">
       <g id="map-u-accueil-et-livre" transform="translate(893.426796 566.152129)">
         <rect id="map-u-section-1" width="682.012028" height="560.962274" rx="4" ry="4" transform="matrix(1.144053 0 0 0.690309 51.278491 70.721905)" paintOrder="stroke fill markers" fill="none" stroke="#ce6700" strokeWidth="2"/>

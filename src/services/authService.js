@@ -97,3 +97,23 @@ export const getUserInfo = () => {
     }
     return null;
 };
+
+export const verifyTokenValidity = () => {
+    const token = getToken();
+    if (!token) return false;
+
+    try {
+        const decodedToken = jwtDecode(token);
+        // Vérifie si la date d'expiration du token est supérieure à l'heure actuelle
+        if (decodedToken.exp * 1000 < Date.now()) {
+            // Si le token est expiré, on le supprime du localStorage
+            localStorage.removeItem("token");
+            return false;
+        }
+        return true;
+    } catch (error) {
+        // Si une erreur survient (token invalide), on le supprime également
+        localStorage.removeItem("token");
+        return false;
+    }
+};

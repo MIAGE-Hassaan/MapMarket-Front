@@ -1,7 +1,7 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout"; 
-import Home from "./pages/Home"; 
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -22,13 +22,15 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="forgotPassword" element={<ForgotPassword />} />
           <Route path="resetPassword" element={<ResetPassword />} />
-          <Route path="tasks" element={<Tasks/>}/>
-          <Route path="map" element={<Map/>}/>
-          <Route path="createAccount" element={<CreateAccount />}/>
-          <Route path="gestionStocks" element={<GestionStock />}/>
-          <Route path="createAccount" element={<CreateAccount/>}/>
-          <Route path="employeeManagement" element={<EmployeeManagement/>}/>
-          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee/>}/>
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="map" element={<Map />} />
+          <Route path="createAccount" element={<CreateAccount />} />
+          <Route path="gestionStocks" element={<GestionStock />} />
+          <Route path="employeeManagement" element={<EmployeeManagement />} />
+          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee />} />
+          
+          {/* Rediriger vers la page login si la route n'existe pas */}
+          <Route path="*" element={<Navigate to="/login" />} />
         </Route>
       </Routes>
     </Router>

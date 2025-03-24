@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
+import { jwtDecode } from "jwt-decode"; // Assurez-vous que vous avez installé jwt-decode
 import "../styles/Login.css";
 
 function Login() {
   const { email, setEmail, password, setPassword, error, responseData, handleSubmit, isLoading } = useLogin();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  // Fonction pour vérifier la validité du token
+  const isTokenValid = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      // Vérifie si le token est expiré (token.exp est en secondes, donc *1000 pour comparer avec Date.now())
+      return decodedToken.exp * 1000 > Date.now();
+    } catch (error) {
+      return false;
+    }
+  };
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/user");
+
+    // Si un token est trouvé et valide, rediriger vers la page utilisateur
+    if (token && isTokenValid(token)) {
+      navigate("/map");
     }
   }, [navigate]);
 
