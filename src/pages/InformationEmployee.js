@@ -1,33 +1,75 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/InformationEmployee.css";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useLocation} from "react-router-dom";
+import userService from "../services/userService";
 
 function InformationEmployee() {
-    // État pour suivre l'activité sélectionnée
-    const { prenom, nom } = useParams();
+    
+    const [ dailyData, setDailyData ] = useState([]);
+    const [ weeklyData, setWeeklyData ] = useState([]);
     const [selectedActivity, setSelectedActivity] = useState("quotidienne");
     const navigate = useNavigate();
+    const location = useLocation();
+    const { id, nom, prenom } = location.state || {};
 
-
-    // Données pour chaque type d'activité
-    const dailyData = [
-        { product: "Pâtes tagliatelle", quantity: 25, time: "11:50" },
-        { product: "Sauce tomate", quantity: 15, time: "10:00" },
-        { product: "Lardons", quantity: 30, time: "16:03" },
-        { product: "Pain", quantity: 12, time: "14:33" },
-        { product: "Savon", quantity: 9, time: "08:20" }
-    ];
-
-    const weeklyData = [
-        { product: "Farine", quantity: 50, time: "Lundi" },
-        { product: "Sucre", quantity: 40, time: "Mardi" },
-        { product: "Beurre", quantity: 35, time: "Mercredi" },
-        { product: "Œufs", quantity: 60, time: "Jeudi" },
-        { product: "Lait", quantity: 20, time: "Vendredi" }
-    ];
-
-    // Sélection des données en fonction de l'activité choisie
+    
     const displayedData = selectedActivity === "quotidienne" ? dailyData : weeklyData;
+
+    async function fetchInformation() {
+        try {
+            const information = await userService.getAllAlertes(id);
+            console.log("Alertes récupérées :", information);
+
+            if (!information || information.length === 0) {
+                console.warn("Aucune alerte reçue.");
+                setDailyData([]);
+                return;
+            }
+
+            // Obtenir la date du jour
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+
+            let dailyData = [];
+
+            // Filtrer les alertes du jour
+            information.forEach(alerte => {
+                if (alerte.date) {
+                    // Convertir l'alerte.date en objet Date
+                    const alerteDate = new Date(alerte.date);
+                    const alerteDateString = alerteDate.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+
+                    // Si l'alerte correspond à aujourd'hui
+                    if (alerteDateString === todayString) {
+                        // Extraire l'heure et les minutes (sans secondes)
+                        const hours = alerteDate.getHours().toString().padStart(2, '0');
+                        const minutes = alerteDate.getMinutes().toString().padStart(2, '0');
+                        const formattedHour = `${hours}:${minutes}`;
+
+                        // Ajouter la propriété 'formattedHour' à l'alerte
+                        alerte.formattedHour = formattedHour;
+
+                        // Ajouter l'alerte filtrée au tableau dailyData
+                        dailyData.push(alerte);
+                    }
+                }
+            });
+
+            // Mettre à jour l'état avec les alertes du jour
+            setDailyData(dailyData);
+            console.log("Alertes du jour : ", dailyData);
+        } catch (error) {
+            console.error("Erreur lors du chargement des données :", error.message);
+        }
+    }
+
+
+
+
+
+    useEffect(() => {
+        fetchInformation();
+    }, []);
 
     return (
         <div className="InformationEmployee">
@@ -54,9 +96,9 @@ function InformationEmployee() {
                 <tbody>
                 {displayedData.map((item, index) => (
                     <tr key={index}>
-                        <td>{item.product}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.time}</td>
+                        <td>{item.produit?.libelle}</td>
+                        <td>{item.quantite}</td>
+                        <td>{item.formattedHour}</td>
                     </tr>
                 ))}
                 </tbody>

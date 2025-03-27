@@ -12,7 +12,7 @@ function EmployeeManagement() {
 
     async function fetchEmployees() {
         try {
-            const users = await userService.getAllUsers(); // users est déjà un tableau d'objets JSON
+            const users = await userService.getAllUsers();
             if (!users) {
                 throw new Error("Aucune donnée reçue");
             }
@@ -20,7 +20,6 @@ function EmployeeManagement() {
             const rep = users.data;
 
             setEmployees(rep); // Pas besoin de `json()`
-            console.log("test1", employees);
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }
@@ -61,7 +60,7 @@ function EmployeeManagement() {
                 <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>ID Employé</th>
+                    <th>Mail</th>
                     <th>Information</th>
                     <th>Supprimer</th>
                 </tr>
@@ -71,13 +70,13 @@ function EmployeeManagement() {
                     <tr key={employee.uuid}>
                         <td>{employee.nom}</td>
                         <td>{employee.prenom}</td>
-                        <td>{employee.uuid}</td>
+                        <td>{employee.email}</td>
                         <td>
                             <img className="icone"
                                  src="/assets/oeil.png"
                                  width="30"
                                  alt="Voir plus"
-                                 onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}/>
+                                 onClick={() => navigate(`/InformationEmployee`, { state: { id: employee.uuid, nom: employee.nom, prenom: employee.prenom } })}/>
                         </td>
                         <td>
                             <img

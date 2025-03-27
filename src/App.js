@@ -25,7 +25,7 @@ function App() {
           <Route path="map" element={<Map/>}/>
           <Route path="createAccount" element={<CreateAccount/>}/>
           <Route path="employeeManagement" element={<EmployeeManagement/>}/>
-          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee/>}/>
+          <Route path="informationEmployee" element={<InformationEmployee/>}/>
         </Route>
       </Routes>
     </Router>

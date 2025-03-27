@@ -8,8 +8,7 @@ import { faUser as faRegularUser, faBell as faRegularBell } from "@fortawesome/f
 function Login() {
   const { email, setEmail, password, setPassword, error, responseData, handleSubmit, isLoading } = useLogin();
   const navigate = useNavigate();
-
-
+  
 
   return (
     <div className="Login">

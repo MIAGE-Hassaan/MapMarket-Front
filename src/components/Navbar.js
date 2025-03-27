@@ -24,6 +24,10 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Mot de passe oublié";
       case "/resetPassword":
         return "Réinitialisation du mot de passe";
+      case "/EmployeeManagement":
+        return "Gestion employés";
+      case "/InformationEmployee":
+        return "Information employé";
       default:
         return ".";
     }

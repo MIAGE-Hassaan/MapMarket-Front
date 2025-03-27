@@ -32,7 +32,6 @@ async function getAllUsers() {
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Réponse API :", response.data); // Ajoute ce log pour voir si l'API répond bien
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la récupération des utilisateurs :", error);
@@ -60,4 +59,36 @@ async function deleteUser(id) {
     }
 }
 
-export default { loginUser, getAllUsers, deleteUser };
+// Recupere les alertes pour le tableau des donnees dans la page informationEmployee
+async function getAllAlertes(id) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        console.error("Aucun token trouvé !");
+        return [];
+    }
+
+    try {
+        const response = await axios.get(`${API_URL}/alertes`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        console.log("Réponse API :", response.data);
+        let tableau = [];
+
+        response.data.data.filter((alerte) => {
+            if (alerte.user && alerte.user.uuid) {
+                if (id === alerte.user.uuid) {
+                    tableau.push(alerte);
+                }
+            }
+        });
+
+        console.log("test tableau", tableau);
+        return tableau;
+    } catch (error) {
+        console.error("Erreur lors de la récupération des alertes :", error);
+        return [];
+    }
+}
+
+export default { loginUser, getAllUsers, deleteUser, getAllAlertes };
