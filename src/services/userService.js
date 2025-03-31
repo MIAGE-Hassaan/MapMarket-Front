@@ -53,7 +53,6 @@ async function deleteUser(id) {
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log(`Utilisateur avec ID ${id} supprimé.`);
     } catch (error) {
         console.error("Erreur lors de la suppression :", error.response ? error.response.data : error.message);
     }
@@ -72,7 +71,6 @@ async function getAllAlertes(id) {
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Réponse API :", response.data);
         let tableau = [];
 
         response.data.data.filter((alerte) => {
@@ -83,7 +81,6 @@ async function getAllAlertes(id) {
             }
         });
 
-        console.log("test tableau", tableau);
         return tableau;
     } catch (error) {
         console.error("Erreur lors de la récupération des alertes :", error);

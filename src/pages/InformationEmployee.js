@@ -20,7 +20,6 @@ function InformationEmployee() {
     async function fetchInformation() {
         try {
             const information = await userService.getAllAlertes(id);
-            console.log("Alertes récupérées :", information);
 
             if (!information || information.length === 0) {
                 console.warn("Aucune alerte reçue.");
@@ -36,7 +35,6 @@ function InformationEmployee() {
             let weeklyData = [];
             let dates = getLastSixDays();
             let tabJour = [0,0,0,0,0,0,0];
-            console.log("test dates", dates);
 
             // Filtrer les alertes du jour
             information.forEach(alerte => {
@@ -77,8 +75,7 @@ function InformationEmployee() {
                     },
                 ],
             });
-            console.log("graphgiquezertgyhuj",tabJour);
-            console.log("Alertes du jour : ", dailyData);
+
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }

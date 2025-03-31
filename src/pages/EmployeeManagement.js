@@ -32,7 +32,6 @@ function EmployeeManagement() {
 
         try {
             await userService.deleteUser(id); // On ne passe que l'ID
-            console.log(`Employé avec l'ID ${id} supprimé.`);
             await fetchEmployees(); // Rafraîchir la liste des employés seulement après une suppression réussie
         } catch (error) {
             console.error("Erreur lors de la suppression de l'employé :", error);
