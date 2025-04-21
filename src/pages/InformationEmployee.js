@@ -94,8 +94,6 @@ function InformationEmployee() {
         return dates;
     }
 
-    console.log("6 derniers jours + ajd: ",getLastSixDays());
-
     // Au format MM-DD
     function getLastSix() {
         let dates = [];
@@ -112,9 +110,6 @@ function InformationEmployee() {
         }
         return dates;
     }
-    console.log("MM-DD",getLastSix());
-    console.log(weeklyData);
-
 
     useEffect(() => {
         setWeeklyData({

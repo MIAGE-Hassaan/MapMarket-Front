@@ -10,6 +10,7 @@ import Map from "./pages/Map";
 import CreateAccount from "./pages/CreateAccount";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import InformationEmployee from "./pages/InformationEmployee";
+import Donnee from "./pages/Donnee";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="createAccount" element={<CreateAccount/>}/>
           <Route path="employeeManagement" element={<EmployeeManagement/>}/>
           <Route path="informationEmployee" element={<InformationEmployee/>}/>
+          <Route path="donnee" element={<Donnee/>}/>
         </Route>
       </Routes>
     </Router>

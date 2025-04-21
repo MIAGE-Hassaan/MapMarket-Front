@@ -28,6 +28,8 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Gestion employés";
       case "/InformationEmployee":
         return "Information employé";
+      case "/Donnee":
+        return "Statistiques"
       default:
         return ".";
     }
