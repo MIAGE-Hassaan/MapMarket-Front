@@ -31,6 +31,14 @@ export default function GestionStock() {
 
         loadProducts();
     }, []);
+    const refreshProducts = async () => {
+        try {
+            const response = await fetchProducts();
+            setProducts(response.data);
+        } catch (error) {
+            console.error("Erreur lors du rafraîchissement des produits :", error);
+        }
+    };
 
     // Ajouter un produit
     const handleAddProduct = async (newProduct) => {
@@ -85,7 +93,8 @@ export default function GestionStock() {
                     />
                     <button>Rechercher</button>
                 </div>
-                <ProductTable products={products} search={search} onDelete={handleDelete}/>
+                <ProductTable products={products} search={search} onDelete={handleDelete} onUpdate={refreshProducts} />
+
             </div>
             <div className="form-container">
             <AddProduct onProductAdded={handleAddProduct} />

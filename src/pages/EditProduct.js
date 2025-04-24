@@ -5,11 +5,20 @@ import { getToken } from "../services/authService";
 const API_BASE_URL = "http://mapmarketapi.test/api";
 
 export default function EditProductModal({ product, isOpen, onClose, onUpdate }) {
-    const [formData, setFormData] = useState({ ...product });
+    const [formData, setFormData] = useState({});
     const [rayons, setRayons] = useState([]);
 
     useEffect(() => {
-        if (product) setFormData({ ...product, rayon: product.rayon?.libelle });
+        if (product) {
+            setFormData({
+                libelle: product.libelle || "",
+                prix: product.prix || "",
+                capacite: product.capacite || "",
+                quantite: product.quantite || "",
+                seuil: product.seuil || "",
+                rayon: product.rayon?.libelle || "",
+            });
+        }
     }, [product]);
 
     useEffect(() => {
@@ -20,7 +29,7 @@ export default function EditProductModal({ product, isOpen, onClose, onUpdate })
                 });
                 setRayons(res.data.data);
             } catch (err) {
-                console.error(err);
+                console.error("Erreur lors du chargement des rayons :", err);
             }
         };
         fetchRayons();
@@ -28,18 +37,33 @@ export default function EditProductModal({ product, isOpen, onClose, onUpdate })
 
     const handleSave = async () => {
         try {
-            const rayon = rayons.find((r) => r.libelle === formData.rayon);
-            const updatedProduct = { ...formData, rayon_uuid: rayon?.uuid };
+            const selectedRayon = rayons.find((r) => r.libelle === formData.rayon);
+            if (!selectedRayon) {
+                alert("Rayon sélectionné introuvable.");
+                return;
+            }
+
+            // Construire un objet sans `ref` ni `rayon`
+            const updatedProduct = {
+                libelle: formData.libelle,
+                prix: formData.prix,
+                capacite: formData.capacite,
+                quantite: formData.quantite,
+                seuil: formData.seuil,
+                rayon_uuid: selectedRayon.uuid,
+            };
+
+            console.log("🔼 Envoi à l'API :", updatedProduct);
 
             await axios.put(`${API_BASE_URL}/produits/${product.ref}`, updatedProduct, {
                 headers: { Authorization: `Bearer ${getToken()}` }
             });
 
-            onUpdate(); // recharge produits
-            onClose(); // ferme modal
+            onUpdate(); // recharge les produits
+            onClose();  // ferme la modal
         } catch (err) {
             alert("Erreur lors de la modification.");
-            console.error(err);
+            console.error(" Réponse API :", err.response?.data || err.message);
         }
     };
 
@@ -49,13 +73,41 @@ export default function EditProductModal({ product, isOpen, onClose, onUpdate })
         <div className="modal-overlay">
             <div className="modal">
                 <h3>Modifier le produit</h3>
-                <input value={formData.libelle} onChange={(e) => setFormData({ ...formData, libelle: e.target.value })} />
-                <input value={formData.prix} onChange={(e) => setFormData({ ...formData, prix: e.target.value })} />
-                <input value={formData.capacite} onChange={(e) => setFormData({ ...formData, capacite: e.target.value })} />
-                <input value={formData.quantite} onChange={(e) => setFormData({ ...formData, quantite: e.target.value })} />
-                <input value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} />
-                <select value={formData.rayon} onChange={(e) => setFormData({ ...formData, rayon: e.target.value })}>
-                    {rayons.map((r) => <option key={r.uuid} value={r.libelle}>{r.libelle}</option>)}
+                <input
+                    value={formData.libelle}
+                    onChange={(e) => setFormData({ ...formData, libelle: e.target.value })}
+                    placeholder="Libellé"
+                />
+                <input
+                    value={formData.prix}
+                    onChange={(e) => setFormData({ ...formData, prix: e.target.value })}
+                    placeholder="Prix"
+                />
+                <input
+                    value={formData.capacite}
+                    onChange={(e) => setFormData({ ...formData, capacite: e.target.value })}
+                    placeholder="Capacité"
+                />
+                <input
+                    value={formData.quantite}
+                    onChange={(e) => setFormData({ ...formData, quantite: e.target.value })}
+                    placeholder="Quantité"
+                />
+                <input
+                    value={formData.seuil}
+                    onChange={(e) => setFormData({ ...formData, seuil: e.target.value })}
+                    placeholder="Seuil"
+                />
+                <select
+                    value={formData.rayon}
+                    onChange={(e) => setFormData({ ...formData, rayon: e.target.value })}
+                >
+                    <option value="">-- Sélectionner un rayon --</option>
+                    {rayons.map((r) => (
+                        <option key={r.uuid} value={r.libelle}>
+                            {r.libelle}
+                        </option>
+                    ))}
                 </select>
                 <div className="modal-actions">
                     <button onClick={handleSave}>Enregistrer</button>
