@@ -2,67 +2,45 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: #4879F6;
-    padding: 1%;
-    width: auto;
     justify-content: space-between;
-    top: 0;
+    background-color: #4879F6;
+    padding: 1vw 2vw;
     position: sticky;
+    top: 0;
     z-index: 1;
-}
-
-.user-name-navbar img {
-    border-radius: 50%;
-    width: 4vw;
-    height: 4vw;
-}
-
-.input-icon{
-    width: 2vw;
-    height: 2vw; 
-}
-.Navbar .navbar-title {
-    color: white;
-    font-family: "Merriweather Sans", sans-serif;
-    margin-left: 2%;
-}
-
-.user-navbar-infos {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: auto;
-    margin-right: 10%;
-}
-
-.user-navbar-infos a {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-right: 30%;
-    font-size: 1.5vw;
-}
-
-.user-name-navbar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 0;
-}
-
-.user-name-navbar h3 {
-    color: white;
-    margin-left: 10%;
-    width: auto;
-}
+    width: 100%;
+    box-sizing: border-box;
+  }
   
-.notification-icon-container {
+  .navbar-title {
+    color: white;
+    white-space: nowrap;
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .user-navbar-infos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1vw;
+    max-width: 30vw;
+    flex-shrink: 1;
+  }
+  
+  .notification-icon-container {
     position: relative;
-    display: inline-block;
-}
-
-.alert-dot {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-icon {
+    width: 2vw;
+    height: 2vw;
+  }
+  
+  .alert-dot {
     position: absolute;
     top: 0;
     right: 0;
@@ -70,5 +48,62 @@
     height: 8px;
     background-color: red;
     border-radius: 50%;
-}
+  }
+  
+  .user-name-navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8vw;
+  }
+  
+  .user-name-navbar img {
+    border-radius: 50%;
+    width: 4vw;
+    height: 4vw;
+  }
+  
+  .user-name-navbar h4{
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40vw;
+    margin: 0;
+  }
+  
+  /* Responsive (facultatif mais conseillé) */
+  @media screen and (max-width: 768px) {
+    .Navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1vw;
+    }
+  
+    .navbar-title {
+      font-size: 4vw;
+    }
+  
+    .input-icon {
+      width: 5vw;
+      height: 5vw;
+    }
+  
+    .user-name-navbar img {
+      width: 8vw;
+      height: 8vw;
+    }
+  
+    .user-name-navbar h3 {
+      font-size: 4vw;
+      max-width: 60vw;
+    }
+  
+    .user-navbar-infos {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
   

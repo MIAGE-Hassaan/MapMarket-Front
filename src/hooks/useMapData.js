@@ -8,7 +8,7 @@ const useMapData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       if (!token) {
         window.location.href = '/login';
         return;

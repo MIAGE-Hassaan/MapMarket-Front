@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE_URL = "http://mapmarketapi.test/api";
 
 export const fetchAlerts = async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (!token) {
     throw new Error("Token is missing");
   }

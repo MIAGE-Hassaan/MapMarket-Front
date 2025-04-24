@@ -55,7 +55,7 @@ function Navbar({ collapsed, toggleSidebar }) {
 
   return (
     <div className="Navbar">
-      <h4 className="navbar-title">{title}</h4>
+      <h1 className="navbar-title">{title}</h1>
       <div className="user-navbar-infos">
         <a href="tasks" className="notification-icon-container">
           <img src="../assets/notification-2-line.png" alt="logo" className="input-icon" />
@@ -63,7 +63,7 @@ function Navbar({ collapsed, toggleSidebar }) {
         </a>
         <div className="user-name-navbar">
           <img src="../assets/user.png" alt="User" />
-          <h3>{isLoggedIn && userInfo ? `${userInfo.nom} ${userInfo.prenom}` : "Session invité"}</h3>
+          <h4>{isLoggedIn && userInfo ? `${userInfo.nom} ${userInfo.prenom}` : "Session invité"}</h4>
         </div>
       </div>
     </div>
