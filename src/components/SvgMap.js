@@ -11,7 +11,7 @@ const SvgMap = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token'); // Récupérer le token depuis localStorage
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
           console.error('Token non trouvé');
           return;
@@ -380,7 +380,13 @@ const SvgMap = () => {
               top: `${((rect.top - svgRect.top - 10) / svgRect.height) * 100}%`,
               cursor: 'pointer',
             }}
-            onClick={(e) => handleCircleClick(e, [alert.produit])}
+            onClick={(e) => {
+              const sameRayonProducts = alertsWithDetails
+                .filter(a => a.rayon.uuid === rayon.uuid && a.alert.statut.slug !== 'fait')
+                .map(a => a.produit);
+              handleCircleClick(e, sameRayonProducts);
+            }}
+            
           />
 
           );

@@ -93,7 +93,7 @@ function Tasks() {
   };
 
   const handleConfirm = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (!token) {
       console.error('Token not found');
       return;

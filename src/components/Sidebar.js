@@ -1,37 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { logoutUser, verifyTokenValidity, getUserInfo } from "../services/authService"; // Import de la nouvelle fonction
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  logoutUser,
+  verifyTokenValidity,
+  getUserInfo,
+  getToken
+} from "../services/authService";
 import "../styles/Sidebar.css";
 
 const Sidebar = ({ collapsed, toggleSidebar }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
-  // Vérification du token à chaque re-rendu ou au montage du composant
   useEffect(() => {
-    const tokenValid = verifyTokenValidity();
-    setIsLoggedIn(tokenValid); // Mettre à jour l'état en fonction de la validité du token
+    const checkAuth = () => {
+      const valid = verifyTokenValidity();
+      setIsLoggedIn(valid);
+      if (valid) {
+        const info = getUserInfo();
+        setUserInfo(info);
+      } else {
+        setUserInfo(null);
+        localStorage.removeItem("token");
+        if (location.pathname !== "/login") {
+          navigate("/login");
+        }
+      }
+    };
 
-    // Si le token est invalide, redirige vers la page de connexion
-    if (!tokenValid) {
-      navigate("/login");
-    }
-  }, [navigate]);
+    checkAuth();
+    // Vérifie l'état toutes les 5 minutes
+    const interval = setInterval(checkAuth, 5 * 60 * 1000);
 
-  // Fonction de gestion de la déconnexion
+    return () => clearInterval(interval);
+  }, [navigate, location.pathname]);
+
   const handleLogout = async () => {
-    await logoutUser(navigate); // Déconnecter l'utilisateur
-    setIsLoggedIn(false); // Réinitialiser l'état de connexion
-    navigate("/login"); // Rediriger vers la page de connexion immédiatement après la déconnexion
+    await logoutUser(navigate);
+    setIsLoggedIn(false);
+    setUserInfo(null);
+    navigate("/login");
   };
-
-  const userInfo = getUserInfo();
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-links-container">
         <div className="sidebar-title" onClick={toggleSidebar}>
-          <img src={collapsed ? "../assets/sidebar-unfold-line.png" : "../assets/sidebar-fold-line.png"} alt="toggle" />
+          <img
+            src={
+              collapsed
+                ? "../assets/expand-right-fill.png"
+                : "../assets/contract-left-fill.png"
+            }
+            alt="toggle"
+          />
           {!collapsed && <h4>MapMarket</h4>}
         </div>
         <div className="sidebar-main-links">
@@ -47,6 +71,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
             <img src="../assets/map-pin-line.png" alt="logo" />
             {!collapsed && <p>Cartographie</p>}
           </a>
+
           {isLoggedIn ? (
             <>
               <a href="EmployeeManagement" className="sidebar-main-link">
@@ -61,6 +86,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
             </a>
           )}
         </div>
+
         <div className="sidebar-option-links">
           <a href="settings" className="sidebar-option-link">
             <img src="../assets/settings-3-line.png" alt="logo" />
@@ -69,7 +95,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
           {isLoggedIn && (
             <a className="sidebar-main-link" onClick={handleLogout}>
               <img src="../assets/door-open-line.png" alt="logo" />
-              {!collapsed && <p>Se déconnecter</p>}
+              {!collapsed && <p>Déconnexion</p>}
             </a>
           )}
         </div>

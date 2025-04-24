@@ -1,11 +1,11 @@
 import axios from "axios";
-import { getToken, logoutUser } from "../services/authService";
+import {logoutUser } from "../services/authService";
 
 const API_BASE_URL = "http://mapmarketapi.test/api";
 
 // Fonction pour obtenir les headers avec le token
 const getAuthHeaders = () => {
-    const token = getToken();
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     console.log("Token utilisé dans l'API :", token);
     if (!token) {
         throw new Error("Token manquant. Veuillez vous reconnecter.");

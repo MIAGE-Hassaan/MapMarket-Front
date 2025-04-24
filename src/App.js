@@ -11,25 +11,63 @@ import GestionStock from "./pages/GestionStocks";
 import CreateAccount from "./pages/CreateAccount";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import InformationEmployee from "./pages/InformationEmployee";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Layout contient la Sidebar */}
         <Route path="/" element={<Layout />}>
+          {/* Public routes */}
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="forgotPassword" element={<ForgotPassword />} />
           <Route path="resetPassword" element={<ResetPassword />} />
-          <Route path="tasks" element={<Tasks />} />
-          <Route path="map" element={<Map />} />
           <Route path="createAccount" element={<CreateAccount />} />
-          <Route path="gestionStocks" element={<GestionStock />} />
-          <Route path="employeeManagement" element={<EmployeeManagement />} />
-          <Route path="informationEmployee/:nom/:prenom" element={<InformationEmployee />} />
-          
-          {/* Rediriger vers la page login si la route n'existe pas */}
+
+          {/* Private routes */}
+          <Route
+            path="map"
+            element={
+              <PrivateRoute>
+                <Map />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="tasks"
+            element={
+              <PrivateRoute>
+                <Tasks />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="gestionStocks"
+            element={
+              <PrivateRoute>
+                <GestionStock />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="employeeManagement"
+            element={
+              <PrivateRoute>
+                <EmployeeManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="informationEmployee/:nom/:prenom"
+            element={
+              <PrivateRoute>
+                <InformationEmployee />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Route>
       </Routes>

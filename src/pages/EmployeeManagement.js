@@ -53,7 +53,7 @@ function EmployeeManagement() {
     return (
         <div className="tab">
             <div className="hautListEmployees">
-                <p className={"titre2"} >Liste des employés</p>
+                <h2 className={"titre2"} >Liste des employés</h2>
                 <button className="add-employee-button" onClick={addEmployee}>+ Ajouter un employé</button>
             </div>
             <table>
@@ -73,17 +73,16 @@ function EmployeeManagement() {
                         <td>{employee.prenom}</td>
                         <td>{employee.uuid}</td>
                         <td>
-                            <img className="icone"
-                                 src="/assets/oeil.png"
-                                 width="30"
-                                 alt="Voir plus"
-                                 onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}/>
+                            <img className="search-icon"
+                                src="/assets/search-2-line.png"
+                                alt="Voir plus"
+                                onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}
+                            />
                         </td>
                         <td>
                             <img
-                                className="icone"
-                                src="/assets/filled-trash.png"
-                                width="30"
+                                className="delete-icon"
+                                src="/assets/delete-bin-5-line.png"
                                 alt="Supprimer"
                                 onClick={() => deleteEmployee(employee.uuid, employee.nom, employee.prenom)}
                                 style={{cursor: "pointer"}}

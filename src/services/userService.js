@@ -5,7 +5,7 @@ const API_URL = "http://mapmarketapi.test/api";
 async function loginUser(email, password) {
     try {
         const response = await axios.post(`${API_URL}/login`, { email, password });
-        const token = response.data.token;
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
         if (!token) {
             throw new Error("Aucun token reçu");
@@ -21,12 +21,11 @@ async function loginUser(email, password) {
 
 // Récupérer tous les utilisateurs
 async function getAllUsers() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (!token) {
         console.error("Aucun token trouvé !");
         return [];
     }
-
     try {
         const response = await axios.get(`${API_URL}/users-basics`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -42,13 +41,11 @@ async function getAllUsers() {
 
 // Supprimer un utilisateur
 async function deleteUser(id) {
-    const token = localStorage.getItem("token");
-
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (!token) {
         console.error("Aucun token trouvé !");
         return;
     }
-
     try {
         await axios.delete(`${API_URL}/users-basics/${id}`, {
             headers: { Authorization: `Bearer ${token}` }

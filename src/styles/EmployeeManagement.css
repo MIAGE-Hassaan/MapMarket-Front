@@ -1,5 +1,4 @@
 tbody {
-    font-family: Arial, sans-serif;
     align-items: center;
 }
 
@@ -16,10 +15,7 @@ tbody {
 
 }
 .titre2 {
-    font-size: 36px;
     color: black;
-    margin-bottom: 10px;
-    font-weight: bold;
 }
 
 th {
@@ -30,37 +26,44 @@ th {
     text-align: center;
     width: calc(100% / 3);
 }
+tr{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
 
 .add-employee-button {
-    font-size: 18px;
     background-color: #4879F6;
     color: white;
-    padding: 1% 2%;
-    justify-content: flex-end; /* Aligne le bouton à droite */
-    border-color: white;
-
+    padding: 1%;
+    border: none;
+    border-radius: 0.5vw;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+.add-employee-button:hover{
+    cursor: pointer;
+    opacity: 80%;
 }
 
 table {
-    padding-right: 10px;
-    padding-left: 10px;
-    border-collapse: collapse;
     width: 100%;
     justify-content: space-between;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0.2vw;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     text-align: center;
-
 }
 
 td {
     text-align: center;
     width: auto;
 }
-
-
-.buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-
+td img{
+    width: 2vw;
+    height: auto;
+}
+td img:hover{
+    cursor: pointer;
 }
