@@ -24,9 +24,11 @@ function Donnee(){
                 <div className={"info_donnee"}>
                     <div className="tab_donnee">
                         <tr>
-                            <th>{totalEmployee}</th>
-                            <th>{alertes}</th>
-                            <th>{tacheEffectue}</th>
+
+                                <th className={"th_table"}>{totalEmployee}</th>
+                                <th className={"th_table"}>{alertes}</th>
+                                <th className={"th_table"}>{tacheEffectue}</th>
+
                         </tr>
                         <tr>
                             <td>Total Employes</td>

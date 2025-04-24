@@ -27,7 +27,7 @@
     font-weight: bold;
 }
 
-th {
+.th_table {
     padding: 8px;
     background-color: unset;
     color: black;
