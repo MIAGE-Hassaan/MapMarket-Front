@@ -1,0 +1,38 @@
+.top_donnee {
+    margin: 8%;
+}
+
+.titre_donnee {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 58%;
+    margin-bottom: 2%;
+    font-size: 18px;
+    padding: 1%;
+    font-weight: bold;
+}
+
+.tab_donnee{
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    margin-bottom: 2%;
+
+}
+
+.reponse_donnee {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 58%;
+    font-size: 18px;
+    padding: 1%;
+    font-weight: bold;
+}
+
+.th_table {
+    padding: 8px;
+    background-color: unset;
+    color: black;
+    width: calc(50%/3);
+    font-size: 32px;
+    font-weight: bold;
+
+}

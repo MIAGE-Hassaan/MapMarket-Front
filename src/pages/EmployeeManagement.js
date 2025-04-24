@@ -12,7 +12,7 @@ function EmployeeManagement() {
 
     async function fetchEmployees() {
         try {
-            const users = await userService.getAllUsers(); // users est déjà un tableau d'objets JSON
+            const users = await userService.getAllUsers();
             if (!users) {
                 throw new Error("Aucune donnée reçue");
             }
@@ -20,7 +20,6 @@ function EmployeeManagement() {
             const rep = users.data;
 
             setEmployees(rep); // Pas besoin de `json()`
-            console.log("test1", employees);
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }
@@ -33,7 +32,6 @@ function EmployeeManagement() {
 
         try {
             await userService.deleteUser(id); // On ne passe que l'ID
-            console.log(`Employé avec l'ID ${id} supprimé.`);
             await fetchEmployees(); // Rafraîchir la liste des employés seulement après une suppression réussie
         } catch (error) {
             console.error("Erreur lors de la suppression de l'employé :", error);
@@ -53,7 +51,7 @@ function EmployeeManagement() {
     return (
         <div className="tab">
             <div className="hautListEmployees">
-                <h2 className={"titre2"} >Liste des employés</h2>
+                <p className={"titre2"} >Liste des employés</p>
                 <button className="add-employee-button" onClick={addEmployee}>+ Ajouter un employé</button>
             </div>
             <table>
@@ -61,7 +59,7 @@ function EmployeeManagement() {
                 <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>ID Employé</th>
+                    <th>Mail</th>
                     <th>Information</th>
                     <th>Supprimer</th>
                 </tr>
@@ -71,18 +69,19 @@ function EmployeeManagement() {
                     <tr key={employee.uuid}>
                         <td>{employee.nom}</td>
                         <td>{employee.prenom}</td>
-                        <td>{employee.uuid}</td>
+                        <td>{employee.email}</td>
                         <td>
-                            <img className="search-icon"
-                                src="/assets/search-2-line.png"
-                                alt="Voir plus"
-                                onClick={() => navigate(`/InformationEmployee/${employee.nom}/${employee.prenom}`)}
-                            />
+                            <img className="icone"
+                                 src="/assets/oeil.png"
+                                 width="30"
+                                 alt="Voir plus"
+                                 onClick={() => navigate(`/InformationEmployee`, { state: { id: employee.uuid, nom: employee.nom, prenom: employee.prenom } })}/>
                         </td>
                         <td>
                             <img
-                                className="delete-icon"
-                                src="/assets/delete-bin-5-line.png"
+                                className="icone"
+                                src="/assets/filled-trash.png"
+                                width="30"
                                 alt="Supprimer"
                                 onClick={() => deleteEmployee(employee.uuid, employee.nom, employee.prenom)}
                                 style={{cursor: "pointer"}}

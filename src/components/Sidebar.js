@@ -59,7 +59,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
           {!collapsed && <h4>MapMarket</h4>}
         </div>
         <div className="sidebar-main-links">
-          <a href="dashboard" className="sidebar-main-link">
+          <a href="Donnee" className="sidebar-main-link">
             <img src="../assets/home-9-line.png" alt="logo" />
             {!collapsed && <p>Dashboard</p>}
           </a>
