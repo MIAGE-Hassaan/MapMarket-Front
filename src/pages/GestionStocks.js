@@ -74,7 +74,8 @@ export default function GestionStock() {
                 </div>
             )}
 
-            <div className="table-container">
+            <div className="table-container" style={{height: '100%'}}>
+
                 <div className="search-bar">
                     <input
                         type="text"
@@ -84,10 +85,10 @@ export default function GestionStock() {
                     />
                     <button>Rechercher</button>
                 </div>
-                <ProductTable products={products} search={search} onDelete={handleDelete} />
+                <ProductTable products={products} search={search} onDelete={handleDelete}/>
             </div>
             <div className="form-container">
-                <AddProduct onProductAdded={handleAddProduct} />
+            <AddProduct onProductAdded={handleAddProduct} />
             </div>
         </div>
     );

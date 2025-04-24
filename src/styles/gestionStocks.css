@@ -1,34 +1,30 @@
-/* ====== Styles Généraux ====== */
-.gestion-stock-container {
-    height: 100vh; /* Force la hauteur à 100% de l'écran */
-    overflow: hidden; /* Empêche le scroll global */
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
 
 /* ====== Conteneur Principal ====== */
 .gestion-stock-container {
-    margin: 20px;
+    overflow: hidden; /* Empêche le scroll global */
+    padding: 0;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: flex-start;  /* Aligne les éléments au début du conteneur */
     gap: 20px;  /* Espace entre le tableau et le formulaire */
     width: 100%;
     box-sizing: border-box;
     flex-direction: row;
-    height: calc(100vh - 80px); /* Ajuste selon la hauteur de la navbar */
+    height: calc(100vh - 100px); /* Ajuste selon la hauteur de la navbar */
     min-height: 0;
-    overflow: hidden; /* Empêche le débordement */
 }
 
 /* ====== Tableau des produits (avec scroll) ====== */
 .table-container {
+    flex : 1;
     width: 75%;
     max-height: 80vh; /* Ajuste selon la hauteur de l'écran */
     overflow-y: auto; /* Active le scroll vertical uniquement si nécessaire */
     overflow-x: auto; /* Active le scroll horizontal uniquement si nécessaire */
     border: 1px solid #ddd; /* Bordure pour bien délimiter */
     padding: 10px;
+    max-width: 100%;
+
 }
 
 /* Style du scrollbar pour une meilleure visibilité */
@@ -49,7 +45,8 @@
 .product-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 100%;
+    table-layout: fixed; /* Nouvelle ligne à ajouter */
+
 }
 
 .product-table th, .product-table td {
@@ -208,3 +205,32 @@
     border: 1px solid #ddd;
     border-radius: 8px;
 }
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
