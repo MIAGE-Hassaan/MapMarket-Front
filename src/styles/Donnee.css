@@ -1,5 +1,5 @@
 .top_donnee {
-    margin: 8%;
+    margin: 8% 8% 4% 8%;
 }
 
 .titre_donnee {
@@ -35,4 +35,29 @@
     font-size: 32px;
     font-weight: bold;
 
+}
+
+.bot_donnee {
+    display: flex;
+}
+
+.chart {
+    margin-left: 5%;
+    margin-right: 5%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+
+}
+
+.chart2 {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+    align-items: center;
+    justify-content: center;
+    height: auto;
 }
