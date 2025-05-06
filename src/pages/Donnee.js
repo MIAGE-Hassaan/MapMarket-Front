@@ -8,8 +8,8 @@ import donneeService from "../services/donneeService";
 
 function Donnee(){
     const [ totalEmployee, setTotalEmployee ] = useState([]);
-    const [ alertes, setAlertes ] = useState([]);
-    const [ tacheEffectue, setTacheEffectue ] = useState([]);
+    const [ alertes, setAlertes ] = useState(null);
+    const [ tacheEffectue, setTacheEffectue ] = useState(null);
     const [ weeklyData, setWeeklyData ] = useState({
         labels: [],
         datasets: [],
@@ -41,29 +41,31 @@ function Donnee(){
                 throw new Error("Aucune donnée reçue");
             }
 
-            const rep = alerte.nb_alertes_total;
-            const tache = alerte.nb_alertes_faits;
-            setTacheEffectue(tache);
-            setAlertes(rep);
+            const total = alerte.nb_alertes_total;
+            const fait = alerte.nb_alertes_faits;
+            setTacheEffectue(fait);
+            setAlertes(total);
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }
     }
 
 
-    async function getTachesFaites(){
-        try {
-            const tache = await donneeService.getTacheFaites();
-            if (!tache) {
-                throw new Error("Aucune donnée reçue");
-            }
+    // Au format MM-DD
+    function getLastSix() {
+        let dates = [];
+        let nbAlerte = [];
 
-            const rep = tache.nb_alertes_faits;
-            setTacheEffectue(rep);
-            console.log(rep);
-        } catch (error) {
-            console.error("Erreur lors du chargement des données :", error.message);
+        for (let i = 6; i >= 0; i--) {
+            let date = new Date();
+            date.setDate(date.getDate() - i);
+
+            let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mois sur 2 chiffres
+            let day = date.getDate().toString().padStart(2, '0'); // Jour sur 2 chiffres
+
+            dates.push(`${month}-${day}`);
         }
+        return dates;
     }
 
 
@@ -71,32 +73,33 @@ function Donnee(){
     useEffect(() => {
         getEmployee();
         getAlertesW();
-
         setWeeklyData({
-            labels: [1, 2, 3, 4, 5, 6],
+            labels: getLastSix(),
             datasets: [
                 {
                     label: "Tâches effectuées",
-                    data: [45, 7, 6, 6, 7, 3],
-                },
-            ],
-        });
-
-        // Mettez à jour donutData avec les données calculées après l'initialisation
-        setDonutData({
-            labels: [
-                `Complétées (${tacheEffectue})`, // Utilisez directement la valeur de tacheEffectue
-                `Restantes (${alertes - tacheEffectue})`, // Alertes restantes = Total alertes - Alertes complétées
-            ],
-            datasets: [
-                {
-                    data: [tacheEffectue, alertes - tacheEffectue],  // tacheEffectue pour complétées, alertes restantes pour reportées
-                    backgroundColor: ['#4A7BFF', '#E0E0E0'],
-                    borderWidth: 0,
+                    data: [0, 0, 0, 0, 0, 0],
                 },
             ],
         });
     }, []);
+    useEffect(() => {
+        if (alertes !== null && tacheEffectue !== null) {
+            setDonutData({
+                labels: [
+                    `Complétées (${tacheEffectue})`,
+                    `Restantes (${alertes - tacheEffectue})`,
+                ],
+                datasets: [
+                    {
+                        data: [tacheEffectue, alertes - tacheEffectue],
+                        backgroundColor: ['#4A7BFF', '#E0E0E0'],
+                        borderWidth: 0,
+                    },
+                ],
+            });
+        }
+    }, [alertes, tacheEffectue]);
 
     return(
         <div>
