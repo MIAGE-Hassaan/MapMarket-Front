@@ -64,9 +64,16 @@ export const logoutUser = async (navigate) => {
 };
 
 // Création d’un utilisateur
+// Création d’un utilisateur
 export const registerUser = async (userData) => {
+  const token = getToken(); // récupère le token
   try {
-    const response = await axios.post(`${API_URL}/users-basics`, userData); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
@@ -74,15 +81,15 @@ export const registerUser = async (userData) => {
   }
 };
 
+
 //Récupération de l'UUID d'un utilisateur
 export const getUserUuidByEmail = async (email) => {
   try {
-    const response = await axios.get(`${API_URL}/users-basics`); // Mise à jour ici
+    const response = await axios.get(`${API_URL}/users-basics`);
     const users = response.data;
     const user = users.find((u) => u.email === email);
 
     if (!user) throw new Error("Utilisateur non trouvé");
-
     return user.uuid;
   } catch (error) {
     throw error;
@@ -92,7 +99,7 @@ export const getUserUuidByEmail = async (email) => {
 // Affectation d’un mot de passe à un utilisateur via son UUID
 export const setUserPassword = async (uuid, password) => {
   try {
-    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password }); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
