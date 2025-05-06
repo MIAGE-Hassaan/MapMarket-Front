@@ -12,6 +12,7 @@ import CreateAccount from "./pages/CreateAccount";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import InformationEmployee from "./pages/InformationEmployee";
 import PrivateRoute from "./components/PrivateRoute";
+import Donnee from "./pages/Donnee";
 
 function App() {
   return (
@@ -34,6 +35,14 @@ function App() {
               </PrivateRoute>
             }
           />
+            <Route
+                path="donnee"
+                element={
+                    <PrivateRoute>
+                        <Donnee/>
+                    </PrivateRoute>
+                }
+            />
           <Route
             path="tasks"
             element={
@@ -59,7 +68,7 @@ function App() {
             }
           />
           <Route
-            path="informationEmployee/:nom/:prenom"
+            path="informationEmployee"
             element={
               <PrivateRoute>
                 <InformationEmployee />
