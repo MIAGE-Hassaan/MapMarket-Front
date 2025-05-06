@@ -162,6 +162,7 @@ function InformationEmployee() {
                 <div className="chart">
                     <Bar  data = {weeklyData} />
                 </div>
+
             )}
 
         </div>

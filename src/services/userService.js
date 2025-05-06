@@ -31,7 +31,6 @@ async function getAllUsers() {
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Réponse API :", response.data); // Ajoute ce log pour voir si l'API répond bien
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la récupération des utilisateurs :", error);
