@@ -113,11 +113,11 @@ function InformationEmployee() {
 
     useEffect(() => {
         setWeeklyData({
-            labels: ["aujourd'hui", "test"],
+            labels: getLastSix(),
             datasets: [
                 {
                     label: "Tâches effectuées",
-                    data: [20, 35, 25, 4, 50, 30, 28]
+                    data: [20, 35, 25, 4, 50, 30, 28],
                 },
             ],
         });
