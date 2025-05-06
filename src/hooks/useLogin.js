@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, verifyTokenValidity } from "../services/authService";
+import { loginUser, verifyTokenValidity, getUserRole, getUserInfo } from "../services/authService";
 
 const useLogin = () => {
   const [email, setEmail] = useState("");
@@ -18,8 +18,15 @@ const useLogin = () => {
     try {
       const data = await loginUser(email, password, remember);
       setResponseData(data);
-
+  
       if (verifyTokenValidity()) {
+        const userInfo = getUserInfo(); // Récupère l'UUID depuis le token
+        if (userInfo?.uuid) {
+          await getUserRole(userInfo.uuid); // Affiche le rôle dans la console
+        } else {
+          console.warn("UUID non trouvé dans le token.");
+        }
+  
         navigate("/map");
       } else {
         throw new Error("Token invalide ou expiré après login.");
@@ -30,6 +37,7 @@ const useLogin = () => {
       setIsLoading(false);
     }
   };
+  
 
   return {
     email,

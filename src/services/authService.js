@@ -32,7 +32,11 @@ export const loginUser = async (email, password, remember = false) => {
     if (!token) throw new Error("Token invalide ou manquant.");
 
     saveToken(token, remember);
-    window.location.reload(); // Force le rafraîchissement de l’interface
+
+    // Attendre 5 secondes avant de recharger la page
+    setTimeout(() => {
+      window.location.reload();
+    }, 50000);
 
     return response.data;
   } catch (error) {
@@ -40,6 +44,7 @@ export const loginUser = async (email, password, remember = false) => {
     throw error;
   }
 };
+
 
 // Déconnexion avec suppression du token et rafraîchissement
 export const logoutUser = async (navigate) => {
@@ -56,12 +61,14 @@ export const logoutUser = async (navigate) => {
     );
 
     removeToken();
+    sessionStorage.removeItem("isManager"); // Suppression de isManager
     navigate("/login");
     window.location.reload();
   } catch (error) {
     console.error("Erreur lors de la déconnexion :", error.response?.data || error.message);
   }
 };
+
 
 // Création d’un utilisateur
 export const registerUser = async (userData) => {
@@ -109,6 +116,7 @@ export const getUserInfo = () => {
       return {
         nom: decodedToken.user.nom,
         prenom: decodedToken.user.prenom,
+        uuid: decodedToken.user.uuid
       };
     } catch (error) {
       console.error("Erreur lors du décodage du token :", error);
@@ -135,5 +143,26 @@ export const verifyTokenValidity = () => {
   } catch (error) {
     removeToken();
     return false;
+  }
+};
+
+// Vérification du role user pour vérifier s'il est manager ou non
+export const getUserRole = async (uuid) => {
+  try {
+    const token = getToken();
+    const response = await axios.get(`${API_URL}/users-roles/user/${uuid}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const roleLibelle = response?.data?.data?.[0]?.role?.libelle?.toLowerCase();
+    const isManager = roleLibelle === "manager";
+
+    sessionStorage.setItem("isManager", JSON.stringify(isManager)); // Stockage sous forme de booléen
+
+    return isManager;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du rôle :", error.response?.data || error.message);
+    console.log(uuid);
+    throw error;
   }
 };
