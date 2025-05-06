@@ -66,7 +66,7 @@ export const logoutUser = async (navigate) => {
 // Création d’un utilisateur
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(API_URL, userData);
+    const response = await axios.post(`${API_URL}/users-basics`, userData); // Mise à jour ici
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
@@ -77,7 +77,7 @@ export const registerUser = async (userData) => {
 //Récupération de l'UUID d'un utilisateur
 export const getUserUuidByEmail = async (email) => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}/users-basics`); // Mise à jour ici
     const users = response.data;
     const user = users.find((u) => u.email === email);
 
@@ -92,7 +92,7 @@ export const getUserUuidByEmail = async (email) => {
 // Affectation d’un mot de passe à un utilisateur via son UUID
 export const setUserPassword = async (uuid, password) => {
   try {
-    const response = await axios.post(`${API_URL}/${uuid}/password`, { password });
+    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password }); // Mise à jour ici
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
@@ -106,9 +106,14 @@ export const getUserInfo = () => {
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
+      console.log("Contenu du token décodé :", decodedToken);
+
+      // Assure-toi que la structure du token correspond à ce que tu attends
       return {
-        nom: decodedToken.user.nom,
+        nom: decodedToken.user.nom, // "user" est la clé qui contient les infos utilisateur dans le token
         prenom: decodedToken.user.prenom,
+        email: decodedToken.user.email,
+        uuid: decodedToken.user.uuid,
       };
     } catch (error) {
       console.error("Erreur lors du décodage du token :", error);
@@ -126,6 +131,7 @@ export const verifyTokenValidity = () => {
   try {
     const decodedToken = jwtDecode(token);
 
+    // Vérification de l'expiration du token
     if (decodedToken.exp * 1000 < Date.now()) {
       removeToken();
       return false;
