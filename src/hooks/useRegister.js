@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { registerUser, setUserPassword, getUserUuidByEmail } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { registerUser, getUserUuidByEmail, setUserPassword } from "../services/authService";
 
 const useRegister = () => {
     const [formData, setFormData] = useState({
@@ -11,7 +12,9 @@ const useRegister = () => {
 
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
+    // Gestion des changements de champs
     const handleChange = (e) => {
         setFormData((prev) => ({
             ...prev,
@@ -19,24 +22,26 @@ const useRegister = () => {
         }));
     };
 
+    // Soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setIsLoading(true);
 
         try {
-            // 1. Créer l'utilisateur (hors mot de passe)
             const { nom, prenom, email, password } = formData;
-            await registerUser({ nom, prenom, email });
 
-            // 2. Récupérer l'UUID par l'email
+            // 1. Créer l'utilisateur (hors mot de passe)
+            await registerUser({ nom, prenom, email, password });
+
+            // 2. Récupérer l'UUID via l'email
             const uuid = await getUserUuidByEmail(email);
 
             // 3. Associer le mot de passe
             await setUserPassword(uuid, password);
 
-            // Tu peux rediriger ou notifier ici
             alert("Compte créé avec succès !");
+            navigate("/login");
         } catch (err) {
             setError(
                 err.response?.data?.message ||

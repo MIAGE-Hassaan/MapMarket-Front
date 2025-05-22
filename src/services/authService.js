@@ -1,29 +1,29 @@
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://mapmarketapi.test/api";
 const TOKEN_KEY = "token";
 
-// Sauvegarde du token selon la préférence "Se souvenir de moi"
+// --- Token helpers ---
+
 export const saveToken = (token, remember) => {
   if (remember) {
-    localStorage.setItem(TOKEN_KEY, token); // persistant
+    localStorage.setItem(TOKEN_KEY, token);
   } else {
-    sessionStorage.setItem(TOKEN_KEY, token); // session uniquement
+    sessionStorage.setItem(TOKEN_KEY, token);
   }
 };
 
-// Récupération du token peu importe l'endroit
 export const getToken = () =>
   localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
 
-// Suppression du token des deux stockages
 export const removeToken = () => {
   localStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(TOKEN_KEY);
 };
 
-// Connexion utilisateur avec choix du stockage du token
+// --- Authentification ---
+
 export const loginUser = async (email, password, remember = false) => {
   try {
     const response = await axios.post(`${API_URL}/login`, { email, password });
@@ -33,10 +33,9 @@ export const loginUser = async (email, password, remember = false) => {
 
     saveToken(token, remember);
 
-    // Attendre 5 secondes avant de recharger la page
     setTimeout(() => {
       window.location.reload();
-    }, 50000);
+    }, 5000); // 5 secondes
 
     return response.data;
   } catch (error) {
@@ -45,8 +44,6 @@ export const loginUser = async (email, password, remember = false) => {
   }
 };
 
-
-// Déconnexion avec suppression du token et rafraîchissement
 export const logoutUser = async (navigate) => {
   try {
     const token = getToken();
@@ -61,7 +58,7 @@ export const logoutUser = async (navigate) => {
     );
 
     removeToken();
-    sessionStorage.removeItem("isManager"); // Suppression de isManager
+    sessionStorage.removeItem("isManager");
     navigate("/login");
     window.location.reload();
   } catch (error) {
@@ -69,11 +66,11 @@ export const logoutUser = async (navigate) => {
   }
 };
 
+// --- Utilisateur ---
 
-// Création d’un utilisateur
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/users-basics`, userData); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics`, userData);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
@@ -81,25 +78,24 @@ export const registerUser = async (userData) => {
   }
 };
 
-//Récupération de l'UUID d'un utilisateur
+
 export const getUserUuidByEmail = async (email) => {
   try {
-    const response = await axios.get(`${API_URL}/users-basics`); // Mise à jour ici
-    const users = response.data;
-    const user = users.find((u) => u.email === email);
+    const response = await axios.get(`${API_URL}/users-basics`);
+    const user = response.data.find((u) => u.email === email);
 
     if (!user) throw new Error("Utilisateur non trouvé");
 
     return user.uuid;
   } catch (error) {
+    console.error("Erreur lors de la récupération de l'UUID :", error.response?.data || error.message);
     throw error;
   }
 };
 
-// Affectation d’un mot de passe à un utilisateur via son UUID
 export const setUserPassword = async (uuid, password) => {
   try {
-    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password }); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
@@ -107,43 +103,36 @@ export const setUserPassword = async (uuid, password) => {
   }
 };
 
-// Informations utilisateur depuis le token
+// --- Token Info / Validation ---
+
 export const getUserInfo = () => {
   const token = getToken();
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token);
-      console.log("Contenu du token décodé :", decodedToken);
+  if (!token) return null;
 
-      // Assure-toi que la structure du token correspond à ce que tu attends
-      return {
-        nom: decodedToken.user.nom, // "user" est la clé qui contient les infos utilisateur dans le token
-        prenom: decodedToken.user.prenom,
-        email: decodedToken.user.email,
-        uuid: decodedToken.user.uuid,
-      };
-    } catch (error) {
-      console.error("Erreur lors du décodage du token :", error);
-      return null;
-    }
+  try {
+    const decodedToken = jwtDecode(token);
+    return {
+      nom: decodedToken.user.nom,
+      prenom: decodedToken.user.prenom,
+      email: decodedToken.user.email,
+      uuid: decodedToken.user.uuid,
+    };
+  } catch (error) {
+    console.error("Erreur lors du décodage du token :", error);
+    return null;
   }
-  return null;
 };
 
-// Vérification de la validité du token
 export const verifyTokenValidity = () => {
   const token = getToken();
   if (!token) return false;
 
   try {
     const decodedToken = jwtDecode(token);
-
-    // Vérification de l'expiration du token
     if (decodedToken.exp * 1000 < Date.now()) {
       removeToken();
       return false;
     }
-
     return true;
   } catch (error) {
     removeToken();
@@ -151,7 +140,8 @@ export const verifyTokenValidity = () => {
   }
 };
 
-// Vérification du role user pour vérifier s'il est manager ou non
+// --- Rôle utilisateur ---
+
 export const getUserRole = async (uuid) => {
   try {
     const token = getToken();
@@ -162,12 +152,11 @@ export const getUserRole = async (uuid) => {
     const roleLibelle = response?.data?.data?.[0]?.role?.libelle?.toLowerCase();
     const isManager = roleLibelle === "manager";
 
-    sessionStorage.setItem("isManager", JSON.stringify(isManager)); // Stockage sous forme de booléen
+    sessionStorage.setItem("isManager", JSON.stringify(isManager));
 
     return isManager;
   } catch (error) {
     console.error("Erreur lors de la récupération du rôle :", error.response?.data || error.message);
-    console.log(uuid);
     throw error;
   }
 };
