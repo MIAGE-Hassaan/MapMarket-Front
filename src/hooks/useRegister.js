@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { registerUser, setUserPassword, getUserUuidByEmail } from "../services/authService";
+import {
+    registerUser,
+    getUserUuidByEmail,
+    setUserPassword,
+} from "../services/authService";
 
-const useRegister = () => {
+export default function useRegister() {
     const [formData, setFormData] = useState({
         nom: "",
         prenom: "",
         email: "",
         password: "",
     });
-
-    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -25,22 +28,24 @@ const useRegister = () => {
         setIsLoading(true);
 
         try {
-            // 1. Créer l'utilisateur (hors mot de passe)
-            const { nom, prenom, email, password } = formData;
-            await registerUser({ nom, prenom, email });
+            // Étape 1 : Créer l'utilisateur de base
+            await registerUser({
+                nom: formData.nom,
+                prenom: formData.prenom,
+                email: formData.email,
+            });
 
-            // 2. Récupérer l'UUID par l'email
-            const uuid = await getUserUuidByEmail(email);
+            // Étape 2 : Récupérer son UUID
+            const uuid = await getUserUuidByEmail(formData.email);
 
-            // 3. Associer le mot de passe
-            await setUserPassword(uuid, password);
+            // Étape 3 : Définir son mot de passe
+            await setUserPassword(uuid, formData.password);
 
-            // Tu peux rediriger ou notifier ici
             alert("Compte créé avec succès !");
         } catch (err) {
             setError(
                 err.response?.data?.message ||
-                "Une erreur est survenue lors de la création du compte."
+                "Erreur lors de la création du compte."
             );
         } finally {
             setIsLoading(false);
@@ -54,6 +59,4 @@ const useRegister = () => {
         error,
         isLoading,
     };
-};
-
-export default useRegister;
+}

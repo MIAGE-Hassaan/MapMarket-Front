@@ -3,13 +3,19 @@ import useRegister from "../hooks/useRegister";
 import "../styles/CreateAccount.css";
 
 function CreateAccount() {
-    const { formData, handleChange, handleSubmit, error, isLoading } = useRegister();
+    const {
+        formData,
+        handleChange,
+        handleSubmit,
+        error,
+        isLoading,
+    } = useRegister();
 
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
                 <div className="form-section">
-                    <h2>Informations personnelles</h2>
+                    <h2>Créer un compte</h2>
                     <div className="input-group">
                         <input
                             type="text"
@@ -48,7 +54,11 @@ function CreateAccount() {
                     </div>
                 </div>
 
-                <button type="submit" className="submit-button" disabled={isLoading}>
+                <button
+                    type="submit"
+                    className="submit-button"
+                    disabled={isLoading}
+                >
                     {isLoading ? "Création en cours..." : "Créer le compte"}
                 </button>
 

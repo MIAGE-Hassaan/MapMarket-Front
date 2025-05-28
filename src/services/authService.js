@@ -32,7 +32,11 @@ export const loginUser = async (email, password, remember = false) => {
     if (!token) throw new Error("Token invalide ou manquant.");
 
     saveToken(token, remember);
-    window.location.reload(); // Force le rafraîchissement de l’interface
+
+    // Attendre 5 secondes avant de recharger la page
+    setTimeout(() => {
+      window.location.reload();
+    }, 50000);
 
     return response.data;
   } catch (error) {
@@ -40,6 +44,7 @@ export const loginUser = async (email, password, remember = false) => {
     throw error;
   }
 };
+
 
 // Déconnexion avec suppression du token et rafraîchissement
 export const logoutUser = async (navigate) => {
@@ -56,6 +61,7 @@ export const logoutUser = async (navigate) => {
     );
 
     removeToken();
+    sessionStorage.removeItem("isManager"); // Suppression de isManager
     navigate("/login");
     window.location.reload();
   } catch (error) {
@@ -63,10 +69,18 @@ export const logoutUser = async (navigate) => {
   }
 };
 
+
+// Création d’un utilisateur
 // Création d’un utilisateur
 export const registerUser = async (userData) => {
+  const token = getToken(); // récupère le token
   try {
-    const response = await axios.post(`${API_URL}/users-basics`, userData); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
@@ -74,15 +88,15 @@ export const registerUser = async (userData) => {
   }
 };
 
+
 //Récupération de l'UUID d'un utilisateur
 export const getUserUuidByEmail = async (email) => {
   try {
-    const response = await axios.get(`${API_URL}/users-basics`); // Mise à jour ici
+    const response = await axios.get(`${API_URL}/users-basics`);
     const users = response.data;
     const user = users.find((u) => u.email === email);
 
     if (!user) throw new Error("Utilisateur non trouvé");
-
     return user.uuid;
   } catch (error) {
     throw error;
@@ -92,7 +106,7 @@ export const getUserUuidByEmail = async (email) => {
 // Affectation d’un mot de passe à un utilisateur via son UUID
 export const setUserPassword = async (uuid, password) => {
   try {
-    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password }); // Mise à jour ici
+    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
@@ -141,5 +155,26 @@ export const verifyTokenValidity = () => {
   } catch (error) {
     removeToken();
     return false;
+  }
+};
+
+// Vérification du role user pour vérifier s'il est manager ou non
+export const getUserRole = async (uuid) => {
+  try {
+    const token = getToken();
+    const response = await axios.get(`${API_URL}/users-roles/user/${uuid}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const roleLibelle = response?.data?.data?.[0]?.role?.libelle?.toLowerCase();
+    const isManager = roleLibelle === "manager";
+
+    sessionStorage.setItem("isManager", JSON.stringify(isManager)); // Stockage sous forme de booléen
+
+    return isManager;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du rôle :", error.response?.data || error.message);
+    console.log(uuid);
+    throw error;
   }
 };
