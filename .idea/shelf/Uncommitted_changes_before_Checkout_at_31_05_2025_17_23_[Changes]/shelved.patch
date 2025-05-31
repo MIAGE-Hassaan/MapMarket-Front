@@ -1,0 +1,217 @@
+Index: src/pages/EmployeeManagement.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { useEffect, useState } from \"react\";\r\nimport \"../styles/EmployeeManagement.css\";\r\nimport {useNavigate} from \"react-router-dom\";\r\nimport userService from \"../services/userService\";\r\n\r\nfunction EmployeeManagement() {\r\n    const [employees, setEmployees] = useState([]);\r\n    const [newEmployee, setNewEmployee] = useState({ nom: \"\", prenom: \"\" });\r\n    const [employeeToDelete, setEmployeeToDelete] = useState(null);\r\n    const navigate = useNavigate();\r\n\r\n\r\n    async function fetchEmployees() {\r\n        try {\r\n            const users = await userService.getAllUsers();\r\n            if (!users) {\r\n                throw new Error(\"Aucune donnée reçue\");\r\n            }\r\n\r\n            const rep = users.data;\r\n\r\n            setEmployees(rep); // Pas besoin de `json()`\r\n        } catch (error) {\r\n            console.error(\"Erreur lors du chargement des données :\", error.message);\r\n        }\r\n    }\r\n\r\n    async function deleteEmployee(id, nom, prenom) {\r\n        const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);\r\n\r\n        if (!confirmation) return; // Si l'utilisateur annule, on arrête la fonction.\r\n\r\n        try {\r\n            await userService.deleteUser(id); // On ne passe que l'ID\r\n            await fetchEmployees(); // Rafraîchir la liste des employés seulement après une suppression réussie\r\n        } catch (error) {\r\n            console.error(\"Erreur lors de la suppression de l'employé :\", error);\r\n        }\r\n    }\r\n\r\n\r\n    async function addEmployee() {\r\n        navigate('/CreateAccount');\r\n    }\r\n\r\n\r\n    useEffect(() => {\r\n        fetchEmployees();\r\n    }, []);\r\n\r\n    return (\r\n        <div className=\"tab\">\r\n            <div className=\"hautListEmployees\">\r\n                <p className={\"titre2\"} >Liste des employés</p>\r\n                <button className=\"add-employee-button\" onClick={addEmployee}>+ Ajouter un employé</button>\r\n            </div>\r\n            <table>\r\n                <thead>\r\n                <tr>\r\n                    <th>Nom</th>\r\n                    <th>Prénom</th>\r\n                    <th>Mail</th>\r\n                    <th>Information</th>\r\n                    <th>Supprimer</th>\r\n                </tr>\r\n                </thead>\r\n                <tbody>\r\n                {employees.map(employee => (\r\n                    <tr key={employee.uuid}>\r\n                        <td>{employee.nom}</td>\r\n                        <td>{employee.prenom}</td>\r\n                        <td>{employee.email}</td>\r\n                        <td>\r\n                            <img className=\"icone\"\r\n                                 src=\"/assets/oeil.png\"\r\n                                 width=\"30\"\r\n                                 alt=\"Voir plus\"\r\n                                 onClick={() => navigate(`/InformationEmployee`, { state: { id: employee.uuid, nom: employee.nom, prenom: employee.prenom } })}/>\r\n                        </td>\r\n                        <td>\r\n                            <img\r\n                                className=\"icone\"\r\n                                src=\"/assets/filled-trash.png\"\r\n                                width=\"30\"\r\n                                alt=\"Supprimer\"\r\n                                onClick={() => deleteEmployee(employee.uuid, employee.nom, employee.prenom)}\r\n                                style={{cursor: \"pointer\"}}\r\n                            />\r\n                        </td>\r\n                    </tr>\r\n                ))}\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    );\r\n}\r\n\r\nexport default EmployeeManagement;
+===================================================================
+diff --git a/src/pages/EmployeeManagement.js b/src/pages/EmployeeManagement.js
+--- a/src/pages/EmployeeManagement.js	(revision fa08c898cdeca1d81cfb09cca8b11bc08b99fff0)
++++ b/src/pages/EmployeeManagement.js	(date 1748704997113)
+@@ -19,6 +19,7 @@
+ 
+             const rep = users.data;
+ 
++
+             setEmployees(rep); // Pas besoin de `json()`
+         } catch (error) {
+             console.error("Erreur lors du chargement des données :", error.message);
+@@ -26,7 +27,7 @@
+     }
+ 
+     async function deleteEmployee(id, nom, prenom) {
+-        const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);
++        const confirmation = window.confirm(`Êtes-vous sûr de vouloir archiver l'employé ${prenom} ${nom} ?`);
+ 
+         if (!confirmation) return; // Si l'utilisateur annule, on arrête la fonction.
+ 
+@@ -61,7 +62,7 @@
+                     <th>Prénom</th>
+                     <th>Mail</th>
+                     <th>Information</th>
+-                    <th>Supprimer</th>
++                    <th>Archiver</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+@@ -80,7 +81,7 @@
+                         <td>
+                             <img
+                                 className="icone"
+-                                src="/assets/filled-trash.png"
++                                src="/assets/Cadena.png"
+                                 width="30"
+                                 alt="Supprimer"
+                                 onClick={() => deleteEmployee(employee.uuid, employee.nom, employee.prenom)}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"28f713ab-dddf-4d96-835f-22319819bb62\" name=\"Changes\" comment=\"ertgh\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/pages/Donnee.js\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/styles/Donnee.css\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/package-lock.json\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/package-lock.json\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/package.json\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/package.json\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/App.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/App.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/components/Sidebar.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/components/Sidebar.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/pages/EmployeeManagement.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/pages/EmployeeManagement.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/services/userService.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/services/userService.js\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"JavaScript File\" />\r\n        <option value=\"CSS File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"KELIAN3\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;Kelianlelu&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/MIAGE-Hassaan/MapMarket-Front.git&quot;,\r\n    &quot;accountId&quot;: &quot;02ed8e50-0c79-494f-b1a4-2db570d5c28a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2tx9RMVStXopqqyVr1J5sDuObOy\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Node.js.BD.js.executor&quot;: &quot;Run&quot;,\r\n    &quot;Node.js.EmployeeManagement.js.executor&quot;: &quot;Run&quot;,\r\n    &quot;Node.js.index.js.executor&quot;: &quot;Run&quot;,\r\n    &quot;Node.js.userService.js.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/KelianEluecque/IdeaProjects/MapMarket-front2/src/pages&quot;,\r\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;ts.external.directory.path&quot;: &quot;C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2024.2.1\\\\plugins\\\\javascript-plugin\\\\jsLanguageServicesImpl\\\\external&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\KelianEluecque\\IdeaProjects\\MapMarket-front2\\src\\pages\" />\r\n      <recent name=\"C:\\Users\\KelianEluecque\\IdeaProjects\\MapMarket-front2\\src\\styles\" />\r\n      <recent name=\"C:\\Users\\KelianEluecque\\IdeaProjects\\MapMarket-front2\\src\\services\" />\r\n      <recent name=\"C:\\Users\\KelianEluecque\\IdeaProjects\\MapMarket-front2\\public\\assets\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\KelianEluecque\\IdeaProjects\\MapMarket-front2\\public\\assets\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"JetRunConfigurationType\">\r\n      <module name=\"MapMarket-front2\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"KotlinStandaloneScriptRunConfigurationType\">\r\n      <module name=\"MapMarket-front2\" />\r\n      <option name=\"filePath\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"28f713ab-dddf-4d96-835f-22319819bb62\" name=\"Changes\" comment=\"\" />\r\n      <created>1741282849401</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1741282849401</updated>\r\n      <workItem from=\"1741282850606\" duration=\"1183000\" />\r\n      <workItem from=\"1741284222267\" duration=\"4936000\" />\r\n      <workItem from=\"1741628203139\" duration=\"19580000\" />\r\n      <workItem from=\"1741884075555\" duration=\"6903000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"ertgh\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1741282879923</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1741282879923</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"ertgh\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1741874888565</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1741874888565</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"ertgh\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1741972385919</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1741972385919</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"ertgh\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"ertgh\" />\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision fa08c898cdeca1d81cfb09cca8b11bc08b99fff0)
++++ b/.idea/workspace.xml	(date 1748703991356)
+@@ -4,16 +4,14 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="28f713ab-dddf-4d96-835f-22319819bb62" name="Changes" comment="ertgh">
+-      <change afterPath="$PROJECT_DIR$/src/pages/Donnee.js" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/styles/Donnee.css" afterDir="false" />
++    <list default="true" id="28f713ab-dddf-4d96-835f-22319819bb62" name="Changes" comment="Page Donnee">
++      <change afterPath="$PROJECT_DIR$/public/assets/Cadena.png" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_13_03_2025_17_20_[Changes]/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_13_03_2025_17_20__Changes_.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/pages/EmployeeManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/EmployeeManagement.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/services/userService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/userService.js" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -23,8 +21,8 @@
+   <component name="FileTemplateManagerImpl">
+     <option name="RECENT_TEMPLATES">
+       <list>
+-        <option value="JavaScript File" />
+         <option value="CSS File" />
++        <option value="JavaScript File" />
+       </list>
+     </option>
+   </component>
+@@ -48,6 +46,13 @@
+     &quot;accountId&quot;: &quot;02ed8e50-0c79-494f-b1a4-2db570d5c28a&quot;
+   }
+ }</component>
++  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
++  <component name="KubernetesApiProvider"><![CDATA[{
++  "isMigrated": true
++}]]></component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="ProjectErrors" />
++  </component>
+   <component name="ProjectColorInfo">{
+   &quot;associatedIndex&quot;: 4
+ }</component>
+@@ -61,13 +66,14 @@
+   &quot;keyToString&quot;: {
+     &quot;Node.js.BD.js.executor&quot;: &quot;Run&quot;,
+     &quot;Node.js.EmployeeManagement.js.executor&quot;: &quot;Run&quot;,
++    &quot;Node.js.donneeService.js.executor&quot;: &quot;Run&quot;,
+     &quot;Node.js.index.js.executor&quot;: &quot;Run&quot;,
+     &quot;Node.js.userService.js.executor&quot;: &quot;Run&quot;,
+     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/KelianEluecque/IdeaProjects/MapMarket-front2/src/pages&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/KelianEluecque/IdeaProjects/Projet_Spring&quot;,
+     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+@@ -88,21 +94,6 @@
+     <key name="MoveFile.RECENT_KEYS">
+       <recent name="C:\Users\KelianEluecque\IdeaProjects\MapMarket-front2\public\assets" />
+     </key>
+-  </component>
+-  <component name="RunManager">
+-    <configuration default="true" type="JetRunConfigurationType">
+-      <module name="MapMarket-front2" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+-      <module name="MapMarket-front2" />
+-      <option name="filePath" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+   </component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+@@ -124,6 +115,9 @@
+       <workItem from="1741284222267" duration="4936000" />
+       <workItem from="1741628203139" duration="19580000" />
+       <workItem from="1741884075555" duration="6903000" />
++      <workItem from="1746446843793" duration="18072000" />
++      <workItem from="1747066287918" duration="1130000" />
++      <workItem from="1747152699475" duration="12512000" />
+     </task>
+     <task id="LOCAL-00001" summary="ertgh">
+       <option name="closed" value="true" />
+@@ -149,14 +143,67 @@
+       <option name="project" value="LOCAL" />
+       <updated>1741972385919</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="Page Donnee">
++      <option name="closed" value="true" />
++      <created>1745516930534</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1745516930534</updated>
++    </task>
++    <task id="LOCAL-00005" summary="Page Donnee">
++      <option name="closed" value="true" />
++      <created>1746536827868</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1746536827868</updated>
++    </task>
++    <task id="LOCAL-00006" summary="Page InformationEmployee reUpdate">
++      <option name="closed" value="true" />
++      <created>1746543502736</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1746543502736</updated>
++    </task>
++    <task id="LOCAL-00007" summary="Page Donnee">
++      <option name="closed" value="true" />
++      <created>1746544632101</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1746544632101</updated>
++    </task>
++    <task id="LOCAL-00008" summary="Page Donnee">
++      <option name="closed" value="true" />
++      <created>1747991287815</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1747991287815</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="ertgh" />
+-    <option name="LAST_COMMIT_MESSAGE" value="ertgh" />
++    <MESSAGE value="Page InformationEmployee reUpdate" />
++    <MESSAGE value="Page Donnee" />
++    <option name="LAST_COMMIT_MESSAGE" value="Page Donnee" />
+   </component>
+ </project>
+\ No newline at end of file

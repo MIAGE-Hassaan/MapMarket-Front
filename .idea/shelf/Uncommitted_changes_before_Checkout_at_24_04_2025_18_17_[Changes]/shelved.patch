@@ -1,0 +1,26 @@
+Index: src/services/donneeService.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import axios from 'axios';\r\nconst API_URL = \"http://mapmarketapi.test/api\";\r\n\r\nasync function(){\r\n\r\n}
+===================================================================
+diff --git a/src/services/donneeService.js b/src/services/donneeService.js
+--- a/src/services/donneeService.js	(revision cc7dfeeba5e4f98c7c419709cba85f669cbd8412)
++++ b/src/services/donneeService.js	(date 1745250321201)
+@@ -2,5 +2,16 @@
+ const API_URL = "http://mapmarketapi.test/api";
+ 
+ async function(){
++    const token = localStorage.getItem("token");
++
++    try {
++        const response = await axios.get(`${API_URL}/????????????????`, { // todo
++            headers: { Authorization: `Bearer ${token}` },
++        });
+ 
++
++    } catch (error) {
++        console.error("Erreur lors de la récupération des utilisateurs :", error);
++        return [];
++    }
+ }
+\ No newline at end of file

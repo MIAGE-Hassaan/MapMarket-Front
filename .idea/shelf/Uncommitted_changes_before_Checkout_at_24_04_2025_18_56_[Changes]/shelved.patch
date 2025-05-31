@@ -1,0 +1,23 @@
+Index: src/pages/Donnee.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import \"../styles/Donnee.css\";\r\nimport { useState, useEffect } from \"react\";\r\n\r\n\r\nfunction Donnee(){\r\n    const [ totalEmployee, setTotalEmployee ] = useState([]);\r\n    const [ alertes, setAlertes ] = useState([]);\r\n    const [ tacheEffectue, setTacheEffectue ] = useState([]);\r\n\r\n\r\n\r\n\r\n\r\n    useEffect(() => {\r\n        setTotalEmployee(7);\r\n        setAlertes(61);\r\n        setTacheEffectue(57);\r\n    }, []);\r\n\r\n    return(\r\n        <div>\r\n            <div className={\"top_donnee\"}>\r\n                <p className={\"titre_donnee\"}>Compte rendu global</p>\r\n                <div className={\"info_donnee\"}>\r\n                    <div className=\"tab_donnee\">\r\n                        <tr>\r\n\r\n                                <th className={\"th_table\"}>{totalEmployee}</th>\r\n                                <th className={\"th_table\"}>{alertes}</th>\r\n                                <th className={\"th_table\"}>{tacheEffectue}</th>\r\n\r\n                        </tr>\r\n                        <tr>\r\n                            <td>Total Employes</td>\r\n                            <td>Alertes</td>\r\n                            <td>Tâches effectuées</td>\r\n                        </tr>\r\n                    </div>\r\n\r\n                    <p className={\"reponse_donnee\"}>Taux de réponse hebdomadaire</p>\r\n                </div>\r\n            </div>\r\n\r\n            <div className={\"bot_donnee\"}>\r\n\r\n            </div>\r\n        </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    );\r\n}\r\n\r\nexport default Donnee;
+===================================================================
+diff --git a/src/pages/Donnee.js b/src/pages/Donnee.js
+--- a/src/pages/Donnee.js	(revision a6d28bbb5e9acb70302ac09f3a7235dec17bc688)
++++ b/src/pages/Donnee.js	(date 1745512548987)
+@@ -24,11 +24,9 @@
+                 <div className={"info_donnee"}>
+                     <div className="tab_donnee">
+                         <tr>
+-
+-                                <th className={"th_table"}>{totalEmployee}</th>
+-                                <th className={"th_table"}>{alertes}</th>
+-                                <th className={"th_table"}>{tacheEffectue}</th>
+-
++                            <th className={"th_table"}>{totalEmployee}</th>
++                            <th className={"th_table"}>{alertes}</th>
++                            <th className={"th_table"}>{tacheEffectue}</th>
+                         </tr>
+                         <tr>
+                             <td>Total Employes</td>
