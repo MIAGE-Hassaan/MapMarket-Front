@@ -45,12 +45,16 @@ async function deleteUser(id) {
         console.error("Aucun token trouvé !");
         return;
     }
+
+    const user = {
+        id:id,
+        active:0};
     try {
-        await axios.delete(`${API_URL}/users-basics/${id}`, {
+        await axios.put(`${API_URL}/users-basics/${id}`, user,{
             headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log(`Utilisateur avec ID ${id} supprimé.`);
+        console.log(`Utilisateur avec ID ${id} archivé.`);
     } catch (error) {
         console.error("Erreur lors de la suppression :", error.response ? error.response.data : error.message);
     }

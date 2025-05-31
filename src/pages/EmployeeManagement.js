@@ -18,15 +18,24 @@ function EmployeeManagement() {
             }
 
             const rep = users.data;
+            let tab = [];
+            let i
+            for(i=0;i < rep.length; i++){
+                if (rep[i].active == 1) {
+                    tab.push(rep[i]);
+                }
+            }
+            console.log(tab);
+            console.log((rep))
 
-            setEmployees(rep); // Pas besoin de `json()`
+            setEmployees(tab); // Pas besoin de `json()`
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }
     }
 
     async function deleteEmployee(id, nom, prenom) {
-        const confirmation = window.confirm(`Êtes-vous sûr de vouloir supprimer l'employé ${prenom} ${nom} ?`);
+        const confirmation = window.confirm(`Êtes-vous sûr de vouloir archiver l'employé ${prenom} ${nom} ?`);
 
         if (!confirmation) return; // Si l'utilisateur annule, on arrête la fonction.
 
@@ -34,7 +43,7 @@ function EmployeeManagement() {
             await userService.deleteUser(id); // On ne passe que l'ID
             await fetchEmployees(); // Rafraîchir la liste des employés seulement après une suppression réussie
         } catch (error) {
-            console.error("Erreur lors de la suppression de l'employé :", error);
+            console.error("Erreur lors de l'archivage de l'employé :", error);
         }
     }
 
@@ -80,7 +89,7 @@ function EmployeeManagement() {
                         <td>
                             <img
                                 className="icone"
-                                src="/assets/filled-trash.png"
+                                src="/assets/cadena.png"
                                 width="30"
                                 alt="Supprimer"
                                 onClick={() => deleteEmployee(employee.uuid, employee.nom, employee.prenom)}
