@@ -66,17 +66,20 @@ export const logoutUser = async (navigate) => {
   }
 };
 
-// --- Utilisateur ---
-
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/users-basics`, userData);
+    const response = await axios.post(`${API_URL}/users-basics`, userData, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
     throw error;
   }
 };
+
 
 
 export const getUserUuidByEmail = async (email) => {

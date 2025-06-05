@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser, getUserUuidByEmail, setUserPassword } from "../services/authService";
+import {
+    registerUser,
+    getUserUuidByEmail,
+    setUserPassword,
+} from "../services/authService";
 
-const useRegister = () => {
+export default function useRegister() {
     const [formData, setFormData] = useState({
         nom: "",
         prenom: "",
         email: "",
         password: "",
     });
-
-    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     // Gestion des changements de champs
@@ -31,13 +34,13 @@ const useRegister = () => {
         try {
             const { nom, prenom, email, password } = formData;
 
-            // 1. Créer l'utilisateur (hors mot de passe)
-            await registerUser({ nom, prenom, email, password });
+            // Étape 1 : Créer l'utilisateur
+            await registerUser({ nom, prenom, email });
 
-            // 2. Récupérer l'UUID via l'email
+            // Étape 2 : Récupérer son UUID
             const uuid = await getUserUuidByEmail(email);
 
-            // 3. Associer le mot de passe
+            // Étape 3 : Définir son mot de passe
             await setUserPassword(uuid, password);
 
             alert("Compte créé avec succès !");
@@ -45,7 +48,7 @@ const useRegister = () => {
         } catch (err) {
             setError(
                 err.response?.data?.message ||
-                "Une erreur est survenue lors de la création du compte."
+                "Erreur lors de la création du compte."
             );
         } finally {
             setIsLoading(false);
@@ -59,6 +62,4 @@ const useRegister = () => {
         error,
         isLoading,
     };
-};
-
-export default useRegister;
+}

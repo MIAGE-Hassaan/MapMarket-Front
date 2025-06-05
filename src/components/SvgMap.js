@@ -49,7 +49,7 @@ const SvgMap = () => {
   };
 
   const updateTaskStatus = async (productUuid) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (!token) {
       console.error('Token not found');
       return;
@@ -350,7 +350,6 @@ const SvgMap = () => {
       {alertsWithDetails.map(({ alert, rayon }, index) => {
         const shelfId = `map-u-shelf-${rayon.uuid.replace(/\s+/g, '-')}-1`;
         const shelfElement = svgRef.current.querySelector(`#${shelfId}`);
-
         if (shelfElement) {
           const rect = shelfElement.getBoundingClientRect();
           const svgRect = svgRef.current.getBoundingClientRect();
@@ -395,25 +394,37 @@ const SvgMap = () => {
       })}
 
       {showModal && (
-        <div className="fenetre-alerte">
-          <h4>Produits concernés par l'alerte</h4>
-          <div className='produit-alerte'>
-            {stockInfo.map((product, index) => {
-              const alert = alertsWithDetails.find(a => a.produit.uuid === product.uuid);
-              const buttonText = alert.alert.statut.slug === 'nouveau' ? 'Faire' : 'Valider';
-              return (
-                <div className="produit" key={index}>
-                  <p>{product.libelle}</p>
-                  <p>{product.quantite} / {product.seuil}</p>
-                  <button className="update-task-bouton" onClick={() => updateTaskStatus(product.uuid)}>
-                    {buttonText}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
+<div className="fenetre-alerte">
+  <h4>Produits concernés par l'alerte</h4>
+  <div className='produit-alerte'>
+    {stockInfo.map((product, index) => {
+      const alert = alertsWithDetails.find(a => a.produit.uuid === product.uuid);
+      const buttonText = alert.alert.statut.slug === 'nouveau' ? 'Faire' : 'Valider';
+      let statutColor = '';
+      if (alert.alert.statut.libelle === 'En cours') {
+        statutColor = 'orange';
+      } else if (alert.alert.statut.libelle === 'Nouveau') {
+        statutColor = "red";
+      } else if (alert.alert.statut.libelle === 'Fait') {
+        statutColor = 'green';
+      }
+      return (
+        <div className="produit" key={index}>
+          <p style={{ color: statutColor, fontWeight: 'bold' }}>
+            Statut : {alert.alert.statut.libelle}
+          </p>
+          <p>{product.libelle}</p>
+          <p>{product.quantite} / {product.seuil}</p>
+          <button className="update-task-bouton" onClick={() => updateTaskStatus(product.uuid)}>
+            {buttonText}
+          </button>
         </div>
+      );
+    })}
+  </div>
+  <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
+</div>
+
       )}
     </div>
   );
