@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import {Bar} from "react-chartjs-2";
 import { Doughnut } from "react-chartjs-2";
 import donneeService from "../services/donneeService";
+import userService from "../services/userService";
 
 
 
 function Donnee(){
+    const [ dailyData, setDailyData ] = useState([]);
     const [ totalEmployee, setTotalEmployee ] = useState([]);
     const [ alertes, setAlertes ] = useState(null);
     const [ tacheEffectue, setTacheEffectue ] = useState(null);
@@ -51,6 +53,17 @@ function Donnee(){
     }
 
 
+    // Au format YYYY-MM-DD
+    function getLastSixDays() {
+        let dates = [];
+        for (let i = 6; i >= 0; i--) { // Commence à 7 pour exclure aujourd'hui
+            let date = new Date();
+            date.setDate(date.getDate() - i);
+            dates.push(date.toISOString().split('T')[0]); // Format YYYY-MM-DD
+        }
+        return dates;
+    }
+
     // Au format MM-DD
     function getLastSix() {
         let dates = [];
@@ -70,21 +83,77 @@ function Donnee(){
 
 
 
+    async function fetchInformation() {
+        try {
+            const information = await donneeService.getAllAlertes();
+
+            if (!information || information.length === 0) {
+                console.warn("Aucune alerte reçue.");
+                setDailyData([]);
+                return;
+            }
+
+            // Obtenir la date du jour
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+
+            let dailyData = [];
+            let weeklyData = [];
+            let dates = getLastSixDays();
+            let tabJour = [0,0,0,0,0,0,0];
+
+            // Filtrer les alertes du jour
+            information.forEach(alerte => {
+                if (alerte.date) {
+                    // Convertir l'alerte.date en objet Date
+                    const alerteDate = new Date(alerte.date);
+                    const alerteDateString = alerteDate.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+
+
+                    for (let i = 0; i<=6; i++){
+                        if (alerteDateString === dates[i]){
+                            tabJour[i] += 1;
+                        }
+                    }
+                }
+            });
+
+            // Mettre à jour l'état avec les alertes du jour
+            setDailyData(dailyData);
+            setWeeklyData({
+                labels: getLastSix(),
+                datasets: [
+                    {
+                        label: "Tâches par jour",
+                        data: tabJour
+                    },
+                ],
+            });
+
+        } catch (error) {
+            console.error("Erreur lors du chargement des données :", error.message);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
         getEmployee();
         getAlertesW();
-        setWeeklyData({
-            labels: getLastSix(),
-            datasets: [
-                {
-                    label: "Tâches effectuées",
-                    data: [0, 0, 0, 0, 0, 0],
-                },
-            ],
-        });
+
+
     }, []);
     useEffect(() => {
         if (alertes !== null && tacheEffectue !== null) {
+
+            fetchInformation()
             setDonutData({
                 labels: [
                     `Complétées (${tacheEffectue})`,
@@ -98,6 +167,7 @@ function Donnee(){
                     },
                 ],
             });
+
         }
     }, [alertes, tacheEffectue]);
 
