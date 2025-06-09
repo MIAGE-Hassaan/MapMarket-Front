@@ -38,6 +38,8 @@
 }
 
 .bot_donnee {
+    width: 80%;
+    margin-left: 4%;
     display: flex;
 }
 

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    registerUser,
-    getUserUuidByEmail,
-    setUserPassword,
-} from "../services/authService";
+import { registerUser } from "../services/authService";
 
 export default function useRegister() {
     const [formData, setFormData] = useState({
@@ -17,7 +13,6 @@ export default function useRegister() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // Gestion des changements de champs
     const handleChange = (e) => {
         setFormData((prev) => ({
             ...prev,
@@ -25,7 +20,6 @@ export default function useRegister() {
         }));
     };
 
-    // Soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
@@ -34,14 +28,8 @@ export default function useRegister() {
         try {
             const { nom, prenom, email, password } = formData;
 
-            // Étape 1 : Créer l'utilisateur
-            await registerUser({ nom, prenom, email });
-
-            // Étape 2 : Récupérer son UUID
-            const uuid = await getUserUuidByEmail(email);
-
-            // Étape 3 : Définir son mot de passe
-            await setUserPassword(uuid, password);
+            // Appel unique à l'API d'inscription
+            await registerUser({ nom, prenom, email, password });
 
             alert("Compte créé avec succès !");
             navigate("/login");

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../styles/InformationEmployee.css";
-import {useNavigate, useParams, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import userService from "../services/userService";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 
-
 function InformationEmployee() {
-    
-    const [ dailyData, setDailyData ] = useState([]);
-    const [ weeklyData, setWeeklyData ] = useState([]);
+    const [dailyData, setDailyData] = useState([]);
+    const [weeklyData, setWeeklyData] = useState({});
     const [selectedActivity, setSelectedActivity] = useState("quotidienne");
     const navigate = useNavigate();
     const location = useLocation();
@@ -17,154 +15,139 @@ function InformationEmployee() {
 
     const displayedData = selectedActivity === "quotidienne" ? dailyData : weeklyData;
 
+    useEffect(() => {
+        fetchInformation();
+    }, []);
+
     async function fetchInformation() {
         try {
-            const information = await userService.getAllAlertes(id);
+            const alertes = await userService.getAllAlertes(id);
 
-            if (!information || information.length === 0) {
+            if (!alertes || alertes.length === 0) {
                 console.warn("Aucune alerte reçue.");
                 setDailyData([]);
+                setWeeklyData({});
                 return;
             }
 
-            // Obtenir la date du jour
-            const today = new Date();
-            const todayString = today.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+            const today = new Date().toISOString().split("T")[0];
+            const datesYMD = getLastSevenDates("ymd"); // Pour filtrage logique
+            const datesMD = getLastSevenDates("md"); // Pour affichage du graphique
+            const daily = [];
+            const dailyTaskCount = Array(7).fill(0); // Pour le graph
 
-            let dailyData = [];
-            let weeklyData = [];
-            let dates = getLastSixDays();
-            let tabJour = [0,0,0,0,0,0,0];
+            alertes.forEach((alerte) => {
+                if (!alerte.date) return;
+                const alerteDate = new Date(alerte.date);
+                const dateYMD = alerteDate.toISOString().split("T")[0];
+                const formattedHour = alerteDate.toTimeString().slice(0, 5);
 
-            // Filtrer les alertes du jour
-            information.forEach(alerte => {
-                if (alerte.date) {
-                    // Convertir l'alerte.date en objet Date
-                    const alerteDate = new Date(alerte.date);
-                    const alerteDateString = alerteDate.toISOString().split('T')[0];  // 'YYYY-MM-DD'
+                // Quotidien
+                if (dateYMD === today) {
+                    daily.push({
+                        produit: alerte.produit,
+                        quantite: alerte.quantite,
+                        formattedHour,
+                    });
+                }
 
-                    // Si l'alerte correspond à aujourd'hui
-                    if (alerteDateString === todayString) {
-                        // Extraire l'heure et les minutes (sans secondes)
-                        const hours = alerteDate.getHours().toString().padStart(2, '0');
-                        const minutes = alerteDate.getMinutes().toString().padStart(2, '0');
-                        const formattedHour = `${hours}:${minutes}`;
-
-                        // Ajouter la propriété 'formattedHour' à l'alerte
-                        alerte.formattedHour = formattedHour;
-
-                        // Ajouter l'alerte filtrée au tableau dailyData
-                        dailyData.push(alerte);
-                    }
-                    for (let i = 0; i<=6; i++){
-                        if (alerteDateString === dates[i]){
-                            tabJour[i] += 1;
-                        }
-                    }
+                // Hebdomadaire
+                const index = datesYMD.indexOf(dateYMD);
+                if (index !== -1) {
+                    dailyTaskCount[index]++;
                 }
             });
 
-            // Mettre à jour l'état avec les alertes du jour
-            setDailyData(dailyData);
+            setDailyData(daily);
+
             setWeeklyData({
-                labels: getLastSix(),
+                labels: datesMD,
                 datasets: [
                     {
                         label: "Tâches effectuées",
-                        data: tabJour
+                        data: dailyTaskCount,
                     },
                 ],
             });
-
         } catch (error) {
             console.error("Erreur lors du chargement des données :", error.message);
         }
     }
 
-
-
-    // Au format YYYY-MM-DD
-    function getLastSixDays() {
-        let dates = [];
-        for (let i = 6; i >= 0; i--) { // Commence à 7 pour exclure aujourd'hui
-            let date = new Date();
-            date.setDate(date.getDate() - i);
-            dates.push(date.toISOString().split('T')[0]); // Format YYYY-MM-DD
-        }
-        return dates;
-    }
-
-    // Au format MM-DD
-    function getLastSix() {
-        let dates = [];
-        let nbAlerte = [];
-
+    function getLastSevenDates(format = "ymd") {
+        const dates = [];
         for (let i = 6; i >= 0; i--) {
-            let date = new Date();
+            const date = new Date();
             date.setDate(date.getDate() - i);
 
-            let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mois sur 2 chiffres
-            let day = date.getDate().toString().padStart(2, '0'); // Jour sur 2 chiffres
-
-            dates.push(`${month}-${day}`);
+            if (format === "ymd") {
+                dates.push(date.toISOString().split("T")[0]); // 'YYYY-MM-DD'
+            } else {
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
+                dates.push(`${month}-${day}`); // 'MM-DD'
+            }
         }
         return dates;
     }
-
-    useEffect(() => {
-        setWeeklyData({
-            labels: getLastSix(),
-            datasets: [
-                {
-                    label: "Tâches effectuées",
-                    data: [20, 35, 25, 4, 50, 30, 28],
-                },
-            ],
-        });
-
-        fetchInformation();
-    }, []);
 
     return (
         <div className="InformationEmployee">
             <div className="hautInformationEmployees">
                 <p className="titre2">Information employé de {prenom} {nom}</p>
-                <img className="boutonRetour" src="/assets/BoutonRetour.png" alt="btnRetour" width={30} height={30} onClick={() => navigate("/EmployeeManagement")}/>
+                <img
+                    className="boutonRetour"
+                    src="/assets/BoutonRetour.png"
+                    alt="btnRetour"
+                    width={30}
+                    height={30}
+                    onClick={() => navigate("/EmployeeManagement")}
+                />
             </div>
+
             <div className="buttons">
                 <button
                     className={`button ${selectedActivity === "quotidienne" ? "active" : ""}`}
-                    onClick={() => setSelectedActivity("quotidienne")}>Activité quotidienne</button>
+                    onClick={() => setSelectedActivity("quotidienne")}
+                >
+                    Activité quotidienne
+                </button>
                 <button
                     className={`button ${selectedActivity === "hebdomadaire" ? "active" : ""}`}
-                    onClick={() => setSelectedActivity("hebdomadaire")}>Activité hebdomadaire</button>
+                    onClick={() => setSelectedActivity("hebdomadaire")}
+                >
+                    Activité hebdomadaire
+                </button>
             </div>
+
             {selectedActivity === "quotidienne" ? (
                 <table>
                     <thead>
-                    <tr>
-                        <th>Produits</th>
-                        <th>Quantité</th>
-                        <th>Heure</th>
-                    </tr>
+                        <tr>
+                            <th>Produits</th>
+                            <th>Quantité</th>
+                            <th>Heure</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {dailyData.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.produit?.libelle}</td>
-                            <td>{item.quantite}</td>
-                            <td>{item.formattedHour}</td>
-                        </tr>
-                    ))}
+                        {dailyData.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.produit?.libelle || "Inconnu"}</td>
+                                <td>{item.quantite}</td>
+                                <td>{item.formattedHour}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             ) : (
                 <div className="chart">
-                    <Bar  data = {weeklyData} />
+                    {weeklyData.labels ? (
+                        <Bar data={weeklyData} />
+                    ) : (
+                        <p>Aucune donnée hebdomadaire à afficher.</p>
+                    )}
                 </div>
-
             )}
-
         </div>
     );
 }

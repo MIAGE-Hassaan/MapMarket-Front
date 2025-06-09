@@ -35,7 +35,7 @@ export const loginUser = async (email, password, remember = false) => {
 
     setTimeout(() => {
       window.location.reload();
-    }, 5000); // 5 secondes
+    }, 5000);
 
     return response.data;
   } catch (error) {
@@ -50,10 +50,13 @@ export const logoutUser = async (navigate) => {
     if (!token) throw new Error("Aucun token disponible pour la déconnexion.");
 
     await axios.post(
-      `${API_URL}/logout?Accept=application/json`,
+      `${API_URL}/logout`,
       {},
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
       }
     );
 
@@ -66,45 +69,29 @@ export const logoutUser = async (navigate) => {
   }
 };
 
+
 export const registerUser = async (userData) => {
   try {
+    const token = getToken(); // récupère le token de l'utilisateur connecté
+    if (!token) throw new Error("Token manquant. Connectez-vous.");
+
     const response = await axios.post(`${API_URL}/users-basics`, userData, {
       headers: {
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
+
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la création de l'utilisateur :", error.response?.data || error.message);
+    console.error(
+      "Erreur lors de la création de l'utilisateur :",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
 
-
-
-export const getUserUuidByEmail = async (email) => {
-  try {
-    const response = await axios.get(`${API_URL}/users-basics`);
-    const user = response.data.find((u) => u.email === email);
-
-    if (!user) throw new Error("Utilisateur non trouvé");
-
-    return user.uuid;
-  } catch (error) {
-    console.error("Erreur lors de la récupération de l'UUID :", error.response?.data || error.message);
-    throw error;
-  }
-};
-
-export const setUserPassword = async (uuid, password) => {
-  try {
-    const response = await axios.post(`${API_URL}/users-basics/${uuid}`, { password });
-    return response.data;
-  } catch (error) {
-    console.error("Erreur lors de l'ajout du mot de passe :", error.response?.data || error.message);
-    throw error;
-  }
-};
 
 // --- Token Info / Validation ---
 
@@ -148,6 +135,8 @@ export const verifyTokenValidity = () => {
 export const getUserRole = async (uuid) => {
   try {
     const token = getToken();
+    if (!token) throw new Error("Token manquant pour la récupération du rôle.");
+
     const response = await axios.get(`${API_URL}/users-roles/user/${uuid}`, {
       headers: { Authorization: `Bearer ${token}` },
     });

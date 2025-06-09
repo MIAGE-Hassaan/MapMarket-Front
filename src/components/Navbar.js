@@ -46,6 +46,10 @@ function Navbar({ collapsed, toggleSidebar }) {
         return "Gestion des produits";
       case "/InformationEmployee":
         return "Informations employée";
+      case "/Donnee":
+        return "Dashboard";
+      case "/CreateAccount":
+        return "Ajouter un employé";
       default:
         return ".";
     }

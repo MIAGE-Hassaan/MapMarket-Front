@@ -11,7 +11,6 @@ function Login() {
     password,
     setPassword,
     error,
-    responseData,
     handleSubmit,
     isLoading,
     rememberMe,
@@ -86,15 +85,7 @@ function Login() {
           className="log-submit"
           disabled={isLoading}
         />
-
         {error && <p className="error">{error}</p>}
-
-        {responseData && (
-          <div className="response-data">
-            <h3>Réponse de la requête de connexion :</h3>
-            <pre>{JSON.stringify(responseData, null, 2)}</pre>
-          </div>
-        )}
       </form>
     </div>
   );

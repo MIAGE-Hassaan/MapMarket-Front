@@ -1,27 +1,53 @@
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 const BASE_URL = 'http://mapmarketapi.test/api';
 
-export const fetchSecteurs = async (token) => {
-  return axios.get(`${BASE_URL}/secteurs`, { headers: { Authorization: `Bearer ${token}` } });
-};
+const authHeader = (token) => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/json",
+  },
+});
 
-export const fetchRayons = async (token) => {
-  return axios.get(`${BASE_URL}/rayons`, { headers: { Authorization: `Bearer ${token}` } });
-};
+export const fetchSecteurs = async (token) =>
+  axios.get(`${BASE_URL}/secteurs`, authHeader(token));
 
-export const fetchProduits = async (token) => {
-  return axios.get(`${BASE_URL}/produits`, { headers: { Authorization: `Bearer ${token}` } });
-};
+export const fetchRayons = async (token) =>
+  axios.get(`${BASE_URL}/rayons`, authHeader(token));
 
-export const fetchAlertes = async (token) => {
-  return axios.get(`${BASE_URL}/alertes`, { headers: { Authorization: `Bearer ${token}` } });
-};
+export const fetchProduits = async (token) =>
+  axios.get(`${BASE_URL}/produits`, authHeader(token));
+
+export const fetchAlertes = async (token) =>
+  axios.get(`${BASE_URL}/alertes`, authHeader(token));
 
 export const updateAlertStatus = async (token, alertUuid, statusSlug) => {
-  return axios.put(
-    `${BASE_URL}/alertes/${alertUuid}`,
-    { statut_slug: statusSlug },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  try {
+    const decoded = jwtDecode(token); // decode le token JWT
+    const userUuid = decoded.user?.uuid;
+
+    if (!userUuid) {
+      throw new Error("UUID utilisateur introuvable dans le token.");
+    }
+
+    const response = await axios.put(
+      `${BASE_URL}/alertes/${alertUuid}`,
+      {
+        statut_slug: statusSlug,
+        user_uuid: userUuid,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut de l'alerte :", error.response?.data || error.message);
+    throw error;
+  }
 };

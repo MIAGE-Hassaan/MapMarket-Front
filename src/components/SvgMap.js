@@ -394,36 +394,37 @@ const SvgMap = () => {
       })}
 
       {showModal && (
-<div className="fenetre-alerte">
-  <h4>Produits concernés par l'alerte</h4>
-  <div className='produit-alerte'>
-    {stockInfo.map((product, index) => {
-      const alert = alertsWithDetails.find(a => a.produit.uuid === product.uuid);
-      const buttonText = alert.alert.statut.slug === 'nouveau' ? 'Faire' : 'Valider';
-      let statutColor = '';
-      if (alert.alert.statut.libelle === 'En cours') {
-        statutColor = 'orange';
-      } else if (alert.alert.statut.libelle === 'Nouveau') {
-        statutColor = "red";
-      } else if (alert.alert.statut.libelle === 'Fait') {
-        statutColor = 'green';
-      }
-      return (
-        <div className="produit" key={index}>
-          <p style={{ color: statutColor, fontWeight: 'bold' }}>
-            Statut : {alert.alert.statut.libelle}
-          </p>
-          <p>{product.libelle}</p>
-          <p>{product.quantite} / {product.seuil}</p>
-          <button className="update-task-bouton" onClick={() => updateTaskStatus(product.uuid)}>
-            {buttonText}
-          </button>
-        </div>
-      );
-    })}
-  </div>
-  <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
-</div>
+    <div className="fenetre-alerte">
+      <h4>Produits concernés par l'alerte</h4>
+      <div className="produit-alerte">
+        {stockInfo.map((product, index) => {
+          const alert = alertsWithDetails.find(a => a.produit.uuid === product.uuid);
+          const slug = alert.alert.statut.slug;
+          const libelle = alert.alert.statut.libelle;
+
+          const buttonText = slug === 'nouveau' ? 'Faire' : 'Valider';
+
+          let statutColor = 'black';
+          if (libelle === 'En cours') statutColor = 'orange';
+          else if (libelle === 'Nouveau') statutColor = 'red';
+          else if (libelle === 'Fait') statutColor = 'green';
+
+          return (
+            <div className="produit" key={index}>
+              <p style={{ color: statutColor, fontWeight: 'bold' }}>
+                Statut : {libelle}
+              </p>
+              <p>{product.libelle}</p>
+              <p>{product.quantite} / {product.seuil}</p>
+              <button className="update-task-bouton" onClick={() => updateTaskStatus(product.uuid)}>
+                {buttonText}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <span className="bouton-fermeture" onClick={closeModal}>&times;</span>
+    </div>
 
       )}
     </div>
